@@ -1,12 +1,14 @@
 # Makefile
 
 # Standard
-NAME							= mini_shell
+NAME							= minishell
 
 # Directories
 
 HDR								= hdr/
 SRC_DIR							= src/
+PARSING_DIR						= parse/
+EXECUTE_DIR 					= execute/
 OBJ_DIR							= obj/
 LIBS 							= -lreadline -lncurses
 
@@ -18,13 +20,15 @@ RM								= rm -f
 
 # Sources Files
 
-#FUNCTIONS_DIR					= $(SRC_DIR)Functions/function.c
+PARSING_SRC						= parsing.c
+PARSING_SRC := $(addprefix $(SRC_DIR)$(PARSING_DIR), $(PARSING_SRC))
 
-MINI_SHELL_DIR					= $(SRC_DIR)Mini_Shell/mini_shell.c
+EXECUTE_SRC						= main.c
+EXECUTE_SRC := $(addprefix $(SRC_DIR)$(EXECUTE_DIR), $(EXECUTE_SRC))
 
 # Concatenate all source files
 
-SRCS							= $(MINI_SHELL_DIR)
+SRCS							= $(PARSING_SRC) $(EXECUTE_SRC) 
 
 # Apply the pattern substitution to each SRC and produce a corresponding list of object files in the OBJ_DIR
 
