@@ -20,15 +20,18 @@ RM								= rm -f
 
 # Sources Files
 
-PARSING_SRC						= parsing.c
-PARSING_SRC := $(addprefix $(SRC_DIR)$(PARSING_DIR), $(PARSING_SRC))
+MAIN_SRC						= main.c
+MAIN_SRC 						:= $(addprefix $(SRC_DIR), $(MAIN_SRC))
 
-EXECUTE_SRC						= main.c
-EXECUTE_SRC := $(addprefix $(SRC_DIR)$(EXECUTE_DIR), $(EXECUTE_SRC))
+PARSING_SRC						= parse.c
+PARSING_SRC 					:= $(addprefix $(SRC_DIR)$(PARSING_DIR), $(PARSING_SRC))
+
+EXECUTE_SRC						= execute.c
+EXECUTE_SRC 					:= $(addprefix $(SRC_DIR)$(EXECUTE_DIR), $(EXECUTE_SRC))
 
 # Concatenate all source files
 
-SRCS							= $(PARSING_SRC) $(EXECUTE_SRC) 
+SRCS							= $(MAIN_SRC) $(PARSING_SRC) $(EXECUTE_SRC) 
 
 # Apply the pattern substitution to each SRC and produce a corresponding list of object files in the OBJ_DIR
 

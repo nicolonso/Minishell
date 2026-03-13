@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../hdr/mini_shell.h"
+#include "../include/minishell.h"
 
 int	main(int ac, char **av)
 {
