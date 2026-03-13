@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   mini_shell.h                                       :+:      :+:    :+:   */
+/*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: qcyril-a <qcyril-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 19:49:42 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/03/11 20:30:45 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/03/13 21:32:32 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <readline/readline.h>
-# include <readline/history.h>
+# include <stddef.h>
 
+# include "utils/history.h"
+# include "utils/str.h"
 # include "parse/parse.h"
 # include "execute/execute.h"
-# include "utils/history.h"
 
 // Parsing
 

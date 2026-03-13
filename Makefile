@@ -15,7 +15,7 @@ LIBS 							= -lreadline -lncurses
 # Compiler and CFlags
 
 CC								= cc
-CFLAGS							= -Wall -Wextra -Werror -I$(HDR) -Iinclude
+CFLAGS							= -Wall -Wextra -I$(HDR) -Iinclude
 RM								= rm -f
 
 # Sources Files
@@ -23,7 +23,7 @@ RM								= rm -f
 MAIN_SRC						= main.c
 MAIN_SRC 						:= $(addprefix $(SRC_DIR), $(MAIN_SRC))
 
-PARSING_SRC						= parse.c
+PARSING_SRC						= parse.c prompt_loop.c
 PARSING_SRC 					:= $(addprefix $(SRC_DIR)$(PARSING_DIR), $(PARSING_SRC))
 
 EXECUTE_SRC						= execute.c

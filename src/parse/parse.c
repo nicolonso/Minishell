@@ -1,12 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalfonso <nalfonso@student.42.fr>          +#+  +:+       +#+        */
+/*   By: qcyril-a <qcyril-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 18:21:12 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/03/13 18:21:13 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/03/13 21:22:42 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../../include/minishell.h"
+
+size_t	parse_input(char *str)
+{
+    return (printf("You typed this: %s\n", str));
+}
