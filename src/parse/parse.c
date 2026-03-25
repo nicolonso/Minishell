@@ -13,57 +13,7 @@
 #include "../../include/minishell.h"
 #include "../../include/parse/parse.h"
 #include "../../include/utils/str.h"
-/*
-size_t	ft_strlen(char *s)
-{
-    size_t  i;
-
-    i = 0;
-    while (s && s[i])
-        i++;
-    return (i);
-}*/
-
-int	is_space(int c)
-{
-	if (c == ' ' || c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v')
-		return 1;
-	return 0;
-}
-
-int	ct_wds(char *str)
-{
-	int	i;
-	int	n;
-	
-	i = 0;
-	n = 0;
-	while (str && str[i])
-	{
-		if (is_space(str[i]))
-			i++;
-		else
-		{
-			while (str[i] && !is_space(str[i]))
-				i++;
-			n++;
-		}
-	}
-	return n;
-}
-
-void	freetab(char **tab, int k)
-{
-	int	i;
-
-	i = 0;
-	while (tab && i < k)
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
-}
+#include "../../include/utils/mem.h"
 
 char	*sub_str(char *s, int start, int len)
 {

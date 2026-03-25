@@ -14,20 +14,23 @@
 
 void	prompt_loop(void)
 {
+		char	*input;	
+
 	while (1)
 	{
-		char	*input;	
+
 		input = readline("minishell$ ");
 		if (!input)
 			break ;
-		if (!ft_strcmp(input, "exit"))
+		if (input[0])
+			add_history(input);
+		if (!ft_strncmp(input, "exit", 4))
 		{
 				free(input);
 				break ;
 		}
-//		if (!is_blank_line(input))
-//			add_history(input);
 		parse_input(input);
 		free(input);
 	}
+	clear_history();
 }

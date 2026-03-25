@@ -24,7 +24,7 @@ RM								= rm -f
 MAIN_SRC						= main.c
 MAIN_SRC 						:= $(addprefix $(SRC_DIR), $(MAIN_SRC))
 
-UTL_SRC							= str.c
+UTL_SRC							= str.c mem.c
 UTL_SRC 						:= $(addprefix $(SRC_DIR)$(UTL_DIR), $(UTL_SRC))
 
 PARSING_SRC						= parse.c prompt_loop.c
