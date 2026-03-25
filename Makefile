@@ -9,6 +9,7 @@ HDR								= hdr/
 SRC_DIR							= src/
 PARSING_DIR						= parse/
 EXECUTE_DIR 					= execute/
+UTL_DIR							= utils/
 OBJ_DIR							= obj/
 LIBS 							= -lreadline -lncurses
 
@@ -23,6 +24,9 @@ RM								= rm -f
 MAIN_SRC						= main.c
 MAIN_SRC 						:= $(addprefix $(SRC_DIR), $(MAIN_SRC))
 
+UTL_SRC							= str.c
+UTL_SRC 						:= $(addprefix $(SRC_DIR)$(UTL_DIR), $(UTL_SRC))
+
 PARSING_SRC						= parse.c prompt_loop.c
 PARSING_SRC 					:= $(addprefix $(SRC_DIR)$(PARSING_DIR), $(PARSING_SRC))
 
@@ -31,7 +35,7 @@ EXECUTE_SRC 					:= $(addprefix $(SRC_DIR)$(EXECUTE_DIR), $(EXECUTE_SRC))
 
 # Concatenate all source files
 
-SRCS							= $(MAIN_SRC) $(PARSING_SRC) $(EXECUTE_SRC) 
+SRCS							= $(MAIN_SRC) $(PARSING_SRC) $(EXECUTE_SRC) $(UTL_SRC)
 
 # Apply the pattern substitution to each SRC and produce a corresponding list of object files in the OBJ_DIR
 
@@ -59,4 +63,4 @@ re:								fclean all
 
 # Phony targets represen action not files
 
-.PHONY:							start all clean fclean re
+.PHONY:							all clean fclean re
