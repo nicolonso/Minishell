@@ -22,7 +22,13 @@
 
 # include "utils/history.h"
 # include "utils/str.h"
+# include "utils/mem.h"
+
+
 # include "parse/parse.h"
+# include "parse/token.h"
+
+
 # include "execute/execute.h"
 
 // Parsing

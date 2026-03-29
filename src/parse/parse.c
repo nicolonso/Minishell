@@ -11,34 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include "../../include/parse/parse.h"
-#include "../../include/utils/str.h"
-#include "../../include/utils/mem.h"
 
-char	*sub_str(char *s, int start, int len)
-{
-	char	*p;
-	int	i;
-	int s_len;
-
-	p =NULL;
-	i = 0;
-	s_len = (int)ft_strlen(s);
-	if (!s || start > s_len)
-		return 0;
-	if (len > s_len - start)
-		len = s_len - start;
-	p = malloc(len + 1);
-	if (!p)
-		return NULL;
-	while (i < len)
-	{
-		p[i] = s[start + i];
-		i++;
-	}
-	p[len] = 0;
-	return (p);
-}
 
 void	filltab(char **mytab, char *str)
 {
@@ -82,7 +55,7 @@ char **	split(char *str)
 	return mytab;
 }
 
-ssize_t	parse_input(char *str)
+ssize_t	print_input(char *str)
 {
    // return (printf("You typed this: %s\n", str));
 	char	**pp;

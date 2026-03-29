@@ -1,6 +1,4 @@
 #include "../../include/minishell.h"
-#include "../../include/parse/parse.h"
-#include "../../include/utils/str.h"
 
 void	freetab(char **tab, int k)
 {

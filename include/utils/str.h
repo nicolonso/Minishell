@@ -14,8 +14,9 @@
 # define STR_H
 
 size_t	ft_strlen(char *s);
-int		ft_strncmp(char *s1, const char *s2, int n);
+int		ft_strncmp(char *s1, const char *s2, size_t n);
 int		ct_wds(char *str);
 int		is_space(int c);
+char	*sub_str(char *s, int start, int len);
 
 #endif
