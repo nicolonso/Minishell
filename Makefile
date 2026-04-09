@@ -27,7 +27,7 @@ MAIN_SRC 						:= $(addprefix $(SRC_DIR), $(MAIN_SRC))
 UTL_SRC							= str.c mem.c
 UTL_SRC 						:= $(addprefix $(SRC_DIR)$(UTL_DIR), $(UTL_SRC))
 
-PARSING_SRC						= parse.c prompt_loop.c
+PARSING_SRC						= parse.c prompt_loop.c tokenize.c
 PARSING_SRC 					:= $(addprefix $(SRC_DIR)$(PARSING_DIR), $(PARSING_SRC))
 
 EXECUTE_SRC						= execute.c
