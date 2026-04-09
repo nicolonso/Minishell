@@ -12,7 +12,11 @@
 
 # include <readline/readline.h>
 # include <readline/history.h>
+# include "token.h"
 
-void	prompt_loop(void);
-ssize_t	print_input(char *str);
+void		prompt_loop(void);
+ssize_t		print_input(char *str);
+char		**split(char *str);
+t_token		*tokenize(char *input);
+void		print_tokens(t_token *toks);
 
