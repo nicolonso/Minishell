@@ -25,7 +25,8 @@ void	prompt_loop(void)
 			break ;
 		if (input[0])
 			add_history(input);
-		if (!ft_strncmp(input, "exit", 4) && (input[4]) == '\0' || is_space(input[4]))
+		if (!ft_strncmp(input, "exit", 4) && ((input[4])\
+			== '\0' || is_space(input[4])))
 		{
 				free(input);
 				break ;

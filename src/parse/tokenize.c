@@ -1,6 +1,6 @@
 
-add_token
-
+#include "../../include/minishell.h"
+/*
 static t_toktype	op_type(const char *s, size_t i)
 {
 	if (s[i] == '|')
@@ -12,28 +12,90 @@ static t_toktype	op_type(const char *s, size_t i)
 	if (s[i] == '>')
 		return (TOK_REDIR_OUT);
 	return (TOK_REDIR_IN);
+}*/
+
+t_token *tok_new(t_toktype type, char *text)
+{
+t_token	*node;
+
+	node = malloc(sizeof(t_token));
+	if (!node)
+		return (NULL);
+	node->type = type;
+	node->text = text;
+	node->next = NULL;
+	return (node);
 }
 
-size_t	tokenize_one(const char *s, size_t i, t_token **tokens)
+void	tok_add_back(t_token **lst, t_token *node)
 {
-	char *word;
-	if (!s)
-		return i;
-	while (s[i] && is_space(s[i]))
-		i++;
-	if (!s[i])
-		return (i);
-	if (is_op(s, i))
+	t_token	*cur;
+
+	if (!lst || !node)
+		return ;
+	if (!*lst)
 	{
-		len = op_len(s, i);
-		add_token(tokens, op_type(s, i), NULL);
-		return (i + len);
+		*lst = node;
+		return ;
 	}
-	word = NULL;
-	i = read_word(s, i, &word)
-	if (!word)
-		return (i);
-	add_token(tokens, TOK_WORD, word);
-	free(word);
-	return (i);
+	cur = *lst;
+	while (cur->next)
+		cur = cur->next;
+	cur->next = node;
+}
+
+void	tok_free_all(t_token *lst)
+{
+	t_token	*next;
+
+	while (lst)
+	{
+		next = lst->next;
+		free(lst->text);
+		free(lst);
+		lst = next;
+	}
+}
+
+t_token	*tokenize(char *input)
+{
+	char **words;
+	t_token *head;
+	t_token *node;
+	int	i;
+
+	head = NULL;
+	words = split(input);
+	if (!words)
+		return (NULL);
+	i = 0;
+	while (words[i])
+	{
+		node = tok_new(TOK_WORD, words[i]);
+		if (!node)
+		{
+			while (words[i])
+				free(words[i++]);
+			free(words);
+			tok_free_all(head);
+			return (NULL);
+		}
+		tok_add_back(&head, node);
+		i++;
+	}
+	free(words);
+	return (head);
+}
+
+void	print_tokens(t_token *toks)
+{
+	int	i;
+
+	i = 0;
+	while (toks)
+	{
+		printf("tok%i: %s\n", i, toks->text);
+		toks = toks->next;
+		i++;
+	}
 }
