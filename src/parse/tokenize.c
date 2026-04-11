@@ -64,10 +64,12 @@ t_token	*tokenize(char *input)
 	t_token *node;
 	int	i;
 
+	if (!input || !*input)
+		return (NULL);
 	head = NULL;
 	words = split(input);
 	if (!words)
-		return (NULL);
+		return NULL;
 	i = 0;
 	while (words[i])
 	{

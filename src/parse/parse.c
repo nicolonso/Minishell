@@ -6,11 +6,12 @@
 /*   By: qcyril-a <qcyril-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 18:21:12 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/03/25 17:57:59 by quintondell      ###   ########.fr       */
+/*   Updated: 2026/04/10 14:34:05 by quintondell      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+#include "../../include/execute/execute.h"
 
 
 void	filltab(char **mytab, char *str)
@@ -55,7 +56,7 @@ char **	split(char *str)
 	return mytab;
 }
 
-ssize_t	print_input(char *str)
+ssize_t	print_cmd(char *str)
 {
    // return (printf("You typed this: %s\n", str));
 	char	**pp;
@@ -67,9 +68,10 @@ ssize_t	print_input(char *str)
 	n = 0;
 	if (!pp)
 		return -1;
+	t_cmd *cmd = create_cmd(pp);
 	while (pp[i])
 	{
-		n += printf("pp%i: %s\n", i, pp[i]);
+		n += printf("pp%i: %s\n", i, cmd[i]);
 		free(pp[i]);
 		i++;
 	}

@@ -10,13 +10,13 @@
 #include <sys/wait.h>
 
 // Structures 
-
+/*
 typedef struct s_cmd
 {
 	char			**av;
 	struct s_cmd	*next;
 }	t_cmd;
-
+*/
 typedef struct s_env
 {
 	char			*key;
