@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   str.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qcyril-a <qcyril-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 21:07:26 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/03/13 21:35:24 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/12 21:43:30 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "../../include/libft.h"
 
-size_t	ft_strlen(char *s)
+size_t	ft_strlen(const char *s)
 {
     size_t  i;
 
@@ -31,5 +31,78 @@ int		ft_strcmp(char *s1, const char *s2)
     i = 0;
     while (s1[i] && s1[i] == s2[i])
         i++;
-    return ((unsigned char)s1[i] - (unsigned char)s2[i])
+    return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+char    *ft_strchr(const char *s, int c)
+{
+    while (*s)
+    {
+        if (*s == (char)c)
+            return ((char *)s);
+        s++;
+    }
+    if ((char)c == '\0')
+        return ((char *)s);
+    return (NULL);
+}
+
+// ft_bzero — needed by ft_calloc
+void    ft_bzero(void *s, size_t n)
+{
+    unsigned char *ptr;
+
+    ptr = (unsigned char *)s;
+    while (n--)
+        *ptr++ = 0;
+}
+
+// ft_strlcat — needed by ft_strjoin
+size_t  ft_strlcat(char *dst, const char *src, size_t size)
+{
+    size_t  dlen;
+    size_t  slen;
+    size_t  i;
+
+    dlen = ft_strlen(dst);
+    slen = ft_strlen((char *)src);
+    if (size <= dlen)
+        return (size + slen);
+    i = 0;
+    while (src[i] && (dlen + i) < (size - 1))
+    {
+        dst[dlen + i] = src[i];
+        i++;
+    }
+    dst[dlen + i] = '\0';
+    return (dlen + slen);
+}
+
+void    ft_free_split(char **arr)
+{
+    int i;
+
+    if (!arr)
+        return ;
+    i = 0;
+    while (arr[i])
+        free(arr[i++]);
+    free(arr);
+}
+
+char    *ft_strndup(const char *s, size_t n)
+{
+    char    *dest;
+    size_t  i;
+
+    dest = ft_calloc(n + 1, sizeof(char));
+    if (!dest)
+        return (NULL);
+    i = 0;
+    while (i < n && s[i])
+    {
+        dest[i] = s[i];
+        i++;
+    }
+    return (dest);
 }

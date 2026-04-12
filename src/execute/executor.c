@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Executor.c                                         :+:      :+:    :+:   */
+/*   executor.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 19:34:46 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/03/23 19:54:16 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/12 22:12:36 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "execute.h"
+#include "../include/minishell.h"
 
 int is_builtin(char *cmd_name)
 {
@@ -52,31 +52,38 @@ int execute_built_in_parent(t_cmd *cmd, t_shell *shell)
 	return (1);
 }
 
-int execute_external(t_cmd *cmd, t_shell *shell)
+int     execute_external(t_cmd *cmd, t_shell *shell)
 {
-	pid_t	pid;
-	int		status;
-	char	*path;
-	
-	pid = fork();
-	if (pid < 0)
-		return (perror("fork"), 1);
-	if (pid == 0)
-	{
-		path = get_command_path(cmd->av[0], shell); // I need built this function
-		if (!path)
-		{
-			fprintf(stderr, "%s: command not found\n", cmd->av[0]);
-			exit (127);
-		}
-		execve(path, cmd->av, shell->env);
-		perror("execve");
-		exit (126);
- 	}
-	waitpid (pid, &status, 0);
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	return (1);
+    pid_t   pid;
+    int     status;
+    char    *path;
+    char    **env_arr;    /* ← new */
+
+    pid = fork();
+    if (pid < 0)
+        return (perror("fork"), 1);
+    if (pid == 0)
+    {
+        path    = get_command_path(cmd->av[0], shell);
+        env_arr = env_to_arr(shell->env);  /* ← convert list → char** */
+        if (!path)
+        {
+            fprintf(stderr, "%s: command not found\n", cmd->av[0]);
+            ft_free_split(env_arr);
+            exit(127);
+        }
+        execve(path, cmd->av, env_arr);     /* ← char** now, no error */
+        perror("execve");
+        free(path);
+        ft_free_split(env_arr);
+        exit(126);
+    }
+    waitpid(pid, &status, 0);
+    if (WIFEXITED(status))
+        return (WEXITSTATUS(status));
+    if (WIFSIGNALED(status))
+        return (128 + WTERMSIG(status));
+    return (1);
 }
 
 int ft_executor(t_cmd *cmd, t_shell *shell)

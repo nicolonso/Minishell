@@ -3,31 +3,63 @@
 /*                                                        :::      ::::::::   */
 /*   prompt_loop.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qcyril-a <qcyril-a@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 20:32:10 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/03/13 21:30:03 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/12 22:09:00 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	prompt_loop(void)
+static void  free_redirs(t_redir *redir)
 {
-	while (1)
-	{
-		char	*input;	
-		input = readline("minishell$ ");
-		if (!input)
-			break ;
-		if (!ft_strcmp(input, "exit"))
-		{
-				free(input);
-				break ;
-		}
-//		if (!is_blank_line(input))
-//			add_history(input);
-		parse_input(input);
-		free(input);
-	}
+    t_redir *next;
+
+    while (redir)
+    {
+        next = redir->next;
+        free(redir->file);
+        free(redir);
+        redir = next;
+    }
+}
+
+static void  free_cmd(t_cmd *cmd)
+{
+    t_cmd   *next;
+
+    while (cmd)
+    {
+        next = cmd->next;
+        ft_free_split(cmd->av);
+        free_redirs(cmd->redirs);
+        free(cmd);
+        cmd = next;
+    }
+}
+
+void    prompt_loop(t_shell *shell)
+{
+    char    *input;
+    t_cmd   *cmd;
+
+    while (1)
+    {
+        input = readline("minishell$ ");
+        if (!input)
+            break ;
+        if (*input)
+            add_history(input);
+        if (ft_strcmp(input, "") != 0)
+        {
+            cmd = parse_input(input, shell);
+            if (cmd)
+            {
+                ft_executor(cmd, shell);
+                free_cmd(cmd);
+            }
+        }
+        free(input);
+    }
 }

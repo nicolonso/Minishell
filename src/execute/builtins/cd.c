@@ -6,44 +6,18 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/22 18:48:02 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/03/22 19:33:59 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/12 20:28:16 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "execute.h"
-
-char	*get_env_value(t_env *env, char *key)
-{
-	while (env)
-	{
-		if (strcmp(env->key, key) == 0)
-			return (env->value);
-		env = env->next;
-	}
-	return (NULL);
-}
-
-void	update_env_value(t_env *env, char *key, char *value)
-{
-	while (env)
-	{
-		if (strcmp(env->key, key) == 0)
-		{
-			free(env->value);
-			env->value = strdup(value);
-			return ;
-		}
-		env = env->next;
-	}	
-}
-
+#include "../include/minishell.h"
 
 void	update_pwd_vars(t_shell *shell, char * oldpwd)
 {
 	char	*newpwd;
 	
 	if (oldpwd)
-		update_env_value(shell->env, "PWD", oldpwd);
+		update_env_value(shell->env, "OLDPWD", oldpwd);
 	newpwd = getcwd(NULL, 0);
 	if (newpwd)
 	{

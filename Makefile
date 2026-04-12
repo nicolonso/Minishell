@@ -1,62 +1,55 @@
-# Makefile
-
-# Standard
-NAME							= minishell
+NAME    = minishell
+CC      = cc
+CFLAGS  = -Wall -Wextra -Werror -I include
+RM      = rm -rf
+LIBS    = -lreadline
 
 # Directories
+SRC_DIR = src/
+OBJ_DIR = obj/
 
-HDR								= hdr/
-SRC_DIR							= src/
-PARSING_DIR						= parse/
-EXECUTE_DIR 					= execute/
-OBJ_DIR							= obj/
-LIBS 							= -lreadline -lncurses
+# Sources — add new files here as you create them
+SRCS    = main.c \
+          parse/prompt_loop.c \
+          parse/parse.c \
+          execute/executor.c \
+          execute/path.c \
+          execute/env_utils.c \
+          execute/builtins/cd.c \
+          execute/builtins/pwd.c \
+          execute/builtins/echo.c \
+          execute/builtins/env.c \
+          execute/builtins/export.c \
+          execute/builtins/unset.c \
+          execute/builtins/exit.c \
+          utils/str.c \
+          utils/mem.c \
+		  utils/ft_strdup.c \
+          utils/ft_split.c \
+          utils/ft_strjoin.c \
+          utils/ft_calloc.c \
+          utils/error.c
 
-# Compiler and CFlags
+SRCS    := $(addprefix $(SRC_DIR), $(SRCS))
+OBJS    = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRCS))
 
-CC								= cc
-CFLAGS							= -Wall -Wextra -I$(HDR) -Iinclude
-RM								= rm -f
+# Rules
+all: $(NAME)
 
-# Sources Files
+$(NAME): $(OBJS)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+	@echo "minishell compiled"
 
-MAIN_SRC						= main.c
-MAIN_SRC 						:= $(addprefix $(SRC_DIR), $(MAIN_SRC))
-
-PARSING_SRC						= parse.c prompt_loop.c
-PARSING_SRC 					:= $(addprefix $(SRC_DIR)$(PARSING_DIR), $(PARSING_SRC))
-
-EXECUTE_SRC						= execute.c
-EXECUTE_SRC 					:= $(addprefix $(SRC_DIR)$(EXECUTE_DIR), $(EXECUTE_SRC))
-
-# Concatenate all source files
-
-SRCS							= $(MAIN_SRC) $(PARSING_SRC) $(EXECUTE_SRC) 
-
-# Apply the pattern substitution to each SRC and produce a corresponding list of object files in the OBJ_DIR
-
-OBJ								= $(patsubst $(SRC_DIR)%.c,$(OBJ_DIR)%.o,$(SRCS))
-
-# Build rules
-
-all:							$(NAME)
-
-$(NAME):						$(OBJ)
-								@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
-
-# Compile object files from source files
-$(OBJ_DIR)%.o:					$(SRC_DIR)%.c
-								@mkdir -p $(@D)
-								@$(CC) $(CFLAGS) -c $< -o $@
+$(OBJ_DIR)%.o: $(SRC_DIR)%.c
+	@mkdir -p $(@D)
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-								@$(RM) -r $(OBJ_DIR)
+	@$(RM) $(OBJ_DIR)
 
-fclean:							clean
-								@$(RM) $(NAME)
+fclean: clean
+	@$(RM) $(NAME)
 
-re:								fclean all
+re: fclean all
 
-# Phony targets represen action not files
-
-.PHONY:							start all clean fclean re
+.PHONY: all clean fclean re
