@@ -12,7 +12,10 @@ OBJ_DIR = obj/
 SRCS    = main.c \
           parse/prompt_loop.c \
           parse/parse.c \
+          parse/tokenize.c \
           execute/executor.c \
+          execute/pipeline.c \
+          execute/redir.c \
           execute/path.c \
           execute/env_utils.c \
           execute/builtins/cd.c \

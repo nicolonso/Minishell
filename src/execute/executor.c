@@ -88,14 +88,7 @@ int     execute_external(t_cmd *cmd, t_shell *shell)
 
 int ft_executor(t_cmd *cmd, t_shell *shell)
 {
-	int status;
-
 	if (!cmd || !cmd->av || !cmd->av[0])
 		return (0);
-	if (is_builtin(cmd->av[0]))
-		status = execute_built_in_parent(cmd, shell);
-	else
-		status = execute_external(cmd, shell);
-	shell->exit_status = status;
-	return (status);
+	return (execute_pipeline(cmd, shell));
 }
