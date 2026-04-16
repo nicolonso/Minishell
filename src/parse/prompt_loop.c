@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 20:32:10 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/16 18:25:46 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/16 20:09:46 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void  free_redirs(t_redir *redir)
     }
 }
 
-static void  free_cmd(t_cmd *cmd)
+void  free_cmd(t_cmd *cmd)
 {
     t_cmd   *next;
 

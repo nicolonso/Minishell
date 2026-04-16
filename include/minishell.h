@@ -86,6 +86,10 @@ t_cmd	*parse_build_cmds(t_token *tokens, t_shell *shell);
 int		validate_tokens(t_token *tok);
 void    prompt_loop(t_shell *shell);
 t_cmd   *parse_input(char *str, t_shell *shell);
+void	free_cmd(t_cmd *cmd);
+
+/* ── expander ─────────────────────────────────────── */
+int		expand_tokens(t_token *tok, t_shell *shell);
 
 /* ── env helpers ──────────────────────────────────── */
 char    *get_env_value(t_env *env, char *key);

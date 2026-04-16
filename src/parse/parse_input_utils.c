@@ -15,9 +15,8 @@ int	parse_tokenize_error(char *str, t_shell *shell)
 	return (1);
 }
 
-int	parse_validate_error(t_token *tokens, t_shell *shell)
+int	parse_validate_error(t_shell *shell)
 {
-	(void)tokens;
 	fprintf(stderr, "minishell: syntax error\n");
 	shell->exit_status = 2;
 	return (1);

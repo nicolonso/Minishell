@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 18:21:12 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/16 19:53:46 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/16 20:22:53 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,9 @@ t_cmd	*parse_input(char *str, t_shell *shell)
 		return (parse_tokenize_error(str, shell), NULL);
 	if (validate_tokens(tokens) != 0)
 		return (free_tokens(tokens), parse_validate_error(shell), NULL);
+	if (expand_tokens(tokens, shell) != 0)
+	return (free_tokens(tokens), NULL);
+/* TODO: remove_quotes(tokens); */
 	cmds = parse_build_cmds(tokens, shell);
 	free_tokens(tokens);
 	return (cmds);

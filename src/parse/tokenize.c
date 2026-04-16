@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 00:00:00 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/16 19:33:44 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/16 20:19:47 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,21 +60,18 @@ static int	read_quoted(const char *s, int i, char *buf, int *len)
 	quote = s[i];
 	if (*len >= 4095)
 		return (-1);
-	buf[(*len)++] = s[i++]; /* copy opening quote */
-
+	buf[(*len)++] = s[i++];
 	while (s[i] && s[i] != quote)
 	{
 		if (*len >= 4095)
 			return (-1);
 		buf[(*len)++] = s[i++];
 	}
-	if (s[i] != quote) /* missing closing quote */
+	if (s[i] != quote)
 		return (-1);
-
 	if (*len >= 4095)
 		return (-1);
-	buf[(*len)++] = s[i++]; /* copy closing quote */
-
+	buf[(*len)++] = s[i++];
 	return (i);
 }
 
