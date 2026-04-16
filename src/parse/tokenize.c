@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 00:00:00 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/16 18:14:59 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/16 18:33:21 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,7 @@ t_token	*tokenize(const char *input)
 				free_tokens(head);
 				return NULL;
 			}
+			i = next;
 		}
 	}
 	return (head);
