@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 18:21:12 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/16 19:23:42 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/16 19:47:09 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,28 @@ static t_cmd	*build_cmd(t_token **cur)
 	return (cmd);
 }
 
+#include "../../include/minishell.h"
+
+t_cmd	*parse_input(char *str, t_shell *shell)
+{
+	t_token	*tokens;
+	t_cmd	*cmds;
+
+	tokens = tokenize(str);
+	if (!tokens)
+		return (parse_tokenize_error(str, shell), NULL);
+	if (validate_tokens(tokens) != 0)
+		return (free_tokens(tokens), parse_validate_error(tokens, shell), NULL);
+
+	/* TODO: expand_tokens(tokens, shell); */
+	/* TODO: remove_quotes(tokens); */
+
+	cmds = parse_build_cmds(tokens);
+	free_tokens(tokens);
+	return (cmds);
+}
+
+/*
 t_cmd	*parse_input(char *str, t_shell *shell)
 {
 	t_token	*tokens;
@@ -164,4 +186,4 @@ t_cmd	*parse_input(char *str, t_shell *shell)
 	}
 	free_tokens(tokens);
 	return (head);
-}
+}*/
