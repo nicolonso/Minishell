@@ -6,11 +6,29 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 18:21:12 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/16 18:18:44 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/16 18:49:11 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+static int unclosed_quote(char *s)
+{
+	int i;
+	char q;
+
+	i = 0;
+	q = 0;
+	while (s[i])
+	{
+		if (!q && (s[i] == '\'' || s[i] == '"'))
+			q =s[i];
+		else if (q && s[i] == q)
+			q = 0;
+		i++;
+	}
+	return (q);
+}
 
 static t_token	*skip_redir(t_token *tok, t_cmd *cmd)
 {
@@ -110,7 +128,11 @@ t_cmd	*parse_input(char *str, t_shell *shell)
 	tokens = tokenize(str);
 	if (!tokens)
 	{
-		fprintf(stderr, "minishell: syntax error: unexpected EOF (could be unclosed quotes)\n");
+		int q = unclosed_quote(str);
+		if (q)
+			fprintf(stderr, "minishell: syntax error: unexpected EOF while looking for matching '%c'\n", q);
+		else
+			fprintf(stderr, "minishell: syntax error\n");
 		shell->exit_status = 2;
 		return (NULL);
 	}
