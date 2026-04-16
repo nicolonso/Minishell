@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 18:21:12 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/16 18:49:11 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/16 19:05:29 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,8 +101,13 @@ static t_cmd	*build_cmd(t_token **cur)
 		if (is_redir_token(tok->type))
 		{
 			tok = skip_redir(tok, cmd);
-			if (!tok && i == 0)
-				return (cmd);
+			if (is_redir_token(tok->type))
+			{
+				tok = skip_redir(tok, cmd);
+				if (!tok)
+					return (NULL);
+				continue ;
+			}
 			continue ;
 		}
 		if (tok->type == TOK_WORD)
@@ -134,6 +139,12 @@ t_cmd	*parse_input(char *str, t_shell *shell)
 		else
 			fprintf(stderr, "minishell: syntax error\n");
 		shell->exit_status = 2;
+		return (NULL);
+	}
+	if (validate_tokens(tokens) != 0)
+	{
+		fprintf(stderr, "minishell: syntax error\n");
+		free(tokens);
 		return (NULL);
 	}
 	cur = tokens;

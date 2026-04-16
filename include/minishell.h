@@ -76,6 +76,7 @@ t_token *tokenize(const char *input);
 void    free_tokens(t_token *tok);
 
 /* ── parse ────────────────────────────────────────── */
+int	validate_tokens(t_token *tok);
 void    prompt_loop(t_shell *shell);
 t_cmd   *parse_input(char *str, t_shell *shell);
 

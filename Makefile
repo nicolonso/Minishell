@@ -14,6 +14,7 @@ SRCS    = main.c \
           parse/parse.c \
           parse/signals.c \
           parse/tokenize.c \
+          parse/token_syntax.c \
           execute/executor.c \
           execute/pipeline.c \
           execute/redir.c \
