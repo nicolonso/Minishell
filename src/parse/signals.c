@@ -5,8 +5,6 @@ volatile sig_atomic_t g_sig = 0;
 void	sigint_handler(int signum)
 {
 	g_sig = signum;
-//	write(1, "\n", 1);
-	rl_done = 1;
 }
 
 static int	rl_sigint_hook(void)

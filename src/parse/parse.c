@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 18:21:12 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/16 16:59:21 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/16 18:18:44 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,11 @@ t_cmd	*parse_input(char *str, t_shell *shell)
 	(void)shell;
 	tokens = tokenize(str);
 	if (!tokens)
+	{
+		fprintf(stderr, "minishell: syntax error: unexpected EOF (could be unclosed quotes)\n");
+		shell->exit_status = 2;
 		return (NULL);
+	}
 	cur = tokens;
 	head = NULL;
 	tail = NULL;

@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 20:32:10 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/16 16:58:32 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/16 18:25:46 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,12 @@ void    prompt_loop(t_shell *shell)
 
     while (1)
     {
+		rl_done = 0; //extra safety
         input = readline("minishell$ ");
 		if (g_sig == SIGINT)
 		{
 			g_sig = 0;
+			rl_done = 0;
 			shell->exit_status = 130;
 			free(input);
 			continue;

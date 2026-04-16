@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenize.c                                        :+:      :+:    :+:   */
+/*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 00:00:00 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/13 00:00:00 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/16 18:14:59 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,22 +60,28 @@ static int	read_quoted(const char *s, int i, char *buf, int *len)
 	quote = s[i++];
 	while (s[i] && s[i] != quote)
 		buf[(*len)++] = s[i++];
-	if (s[i] == quote)
-		i++;
-	return (i);
+	if (s[i] != quote)
+		return (-1);
+	return (i + 1);
 }
 
 static int	read_word(const char *s, int i, t_token **head)
 {
 	char	buf[4096];
 	int		len;
+	int		next;
 
 	len = 0;
 	while (s[i] && s[i] != ' ' && s[i] != '\t'
 		&& s[i] != '|' && s[i] != '<' && s[i] != '>')
 	{
 		if (s[i] == '\'' || s[i] == '"')
-			i = read_quoted(s, i, buf, &len);
+		{
+			next = read_quoted(s, i, buf, &len);
+			if (next == -1)
+				return (-1);
+			i = next;
+		}
 		else
 			buf[len++] = s[i++];
 	}
@@ -114,6 +120,7 @@ t_token	*tokenize(const char *input)
 {
 	t_token	*head;
 	int		i;
+	int		next;
 
 	head = NULL;
 	i = 0;
@@ -124,7 +131,14 @@ t_token	*tokenize(const char *input)
 		else if (input[i] == '|' || input[i] == '<' || input[i] == '>')
 			i = read_operator(input, i, &head);
 		else
-			i = read_word(input, i, &head);
+		{
+			next = read_word(input, i, &head);
+			if (next == -1)
+			{
+				free_tokens(head);
+				return NULL;
+			}
+		}
 	}
 	return (head);
 }
