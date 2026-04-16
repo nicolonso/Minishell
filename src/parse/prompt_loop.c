@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 20:32:10 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/16 15:14:27 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/16 16:58:32 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,29 +39,31 @@ static void  free_cmd(t_cmd *cmd)
     }
 }
 
-void	sigint_handler(int signum)
-{
-	(void) signum;
-	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
-
 void    prompt_loop(t_shell *shell)
 {
     char    *input;
     t_cmd   *cmd;
 
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
+	setup_signals_prompt();
 
     while (1)
     {
         input = readline("minishell$ ");
+		if (g_sig == SIGINT)
+		{
+			g_sig = 0;
+			shell->exit_status = 130;
+			free(input);
+			continue;
+		}
         if (!input)
-            break ;
-        if (*input)
+		{
+			write(1, "exit\n", 5);
+            //break ;
+			//exit(shell->last_status);
+			exit(shell->exit_status);
+        }
+		if (*input)
             add_history(input);
         if (ft_strcmp(input, "") != 0)
         {

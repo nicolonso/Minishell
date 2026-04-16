@@ -6,25 +6,11 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 19:48:44 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/12 22:27:08 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/16 16:58:15 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-/* int	main(int ac, char **av)
-{
-	(void)ac;
-	(void)av;
-//	while (1)
-//	{
-		// Read Line
-	prompt_loop();
-		// Parse Line
-		// Execute command 
-//	}
-	return (0);
-} */
 
 static t_env   *build_env(char **envp)
 {

@@ -6,24 +6,11 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 18:21:12 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/16 13:46:03 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/16 16:59:21 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-/*
-static int	count_words(t_token *tok)
-{
-	int	n;
-
-	n = 0;
-	while (tok && tok->type == TOK_WORD)
-	{
-		n++;
-		tok = tok->next;
-	}
-	return (n);
-}*/
 
 static t_token	*skip_redir(t_token *tok, t_cmd *cmd)
 {

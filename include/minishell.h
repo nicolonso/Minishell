@@ -67,6 +67,10 @@ typedef struct s_token
 /* ── libft ────────────────────────────────────────── */
 # include "libft.h"
 
+/* ── signals ─────────────────────────────────────── */
+extern volatile sig_atomic_t g_sig;
+void	setup_signals_prompt(void);
+
 /* ── tokenizer ───────────────────────────────────── */
 t_token *tokenize(const char *input);
 void    free_tokens(t_token *tok);
