@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 18:21:12 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/16 19:05:29 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/16 19:23:42 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,8 @@ t_cmd	*parse_input(char *str, t_shell *shell)
 	if (validate_tokens(tokens) != 0)
 	{
 		fprintf(stderr, "minishell: syntax error\n");
-		free(tokens);
+		shell->exit_status = 2;
+		free_tokens(tokens);
 		return (NULL);
 	}
 	cur = tokens;

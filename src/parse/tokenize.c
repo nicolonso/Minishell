@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 00:00:00 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/16 18:33:21 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/16 19:19:42 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,11 @@ static int	read_quoted(const char *s, int i, char *buf, int *len)
 
 	quote = s[i++];
 	while (s[i] && s[i] != quote)
+	{
+		if (*len >= 4095)
+			return (-1);
 		buf[(*len)++] = s[i++];
+	}
 	if (s[i] != quote)
 		return (-1);
 	return (i + 1);
@@ -69,7 +73,7 @@ static int	read_word(const char *s, int i, t_token **head)
 {
 	char	buf[4096];
 	int		len;
-	int		next;
+	int		next_i;
 
 	len = 0;
 	while (s[i] && s[i] != ' ' && s[i] != '\t'
@@ -77,13 +81,17 @@ static int	read_word(const char *s, int i, t_token **head)
 	{
 		if (s[i] == '\'' || s[i] == '"')
 		{
-			next = read_quoted(s, i, buf, &len);
-			if (next == -1)
+			next_i = read_quoted(s, i, buf, &len);
+			if (next_i < 0)
 				return (-1);
-			i = next;
+			i = next_i;
 		}
 		else
+		{
+			if (len >= 4095)
+				return (-1);
 			buf[len++] = s[i++];
+		}
 	}
 	buf[len] = '\0';
 	token_append(head, new_token(TOK_WORD, ft_strdup(buf)));
@@ -120,7 +128,7 @@ t_token	*tokenize(const char *input)
 {
 	t_token	*head;
 	int		i;
-	int		next;
+	int		next_i;
 
 	head = NULL;
 	i = 0;
@@ -132,13 +140,13 @@ t_token	*tokenize(const char *input)
 			i = read_operator(input, i, &head);
 		else
 		{
-			next = read_word(input, i, &head);
-			if (next == -1)
+			next_i = read_word(input, i, &head);
+			if (next_i < 0)
 			{
 				free_tokens(head);
 				return NULL;
 			}
-			i = next;
+			i = next_i;
 		}
 	}
 	return (head);
