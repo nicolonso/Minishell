@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 00:00:00 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/16 19:19:42 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/16 19:33:44 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,50 @@ static int	read_quoted(const char *s, int i, char *buf, int *len)
 {
 	char	quote;
 
-	quote = s[i++];
+	quote = s[i];
+	if (*len >= 4095)
+		return (-1);
+	buf[(*len)++] = s[i++]; /* copy opening quote */
+
 	while (s[i] && s[i] != quote)
 	{
 		if (*len >= 4095)
 			return (-1);
 		buf[(*len)++] = s[i++];
 	}
-	if (s[i] != quote)
+	if (s[i] != quote) /* missing closing quote */
 		return (-1);
+
+	if (*len >= 4095)
+		return (-1);
+	buf[(*len)++] = s[i++]; /* copy closing quote */
+
+	return (i);
+}
+
+static int	read_operator(const char *s, int i, t_token **head)
+{
+	if (s[i] == '|')
+	{
+		token_append(head, new_token(TOK_PIPE, ft_strdup("|")));
+		return (i + 1);
+	}
+	if (s[i] == '<' && s[i + 1] == '<')
+	{
+		token_append(head, new_token(TOK_HEREDOC, ft_strdup("<<")));
+		return (i + 2);
+	}
+	if (s[i] == '>' && s[i + 1] == '>')
+	{
+		token_append(head, new_token(TOK_APPEND, ft_strdup(">>")));
+		return (i + 2);
+	}
+	if (s[i] == '<')
+	{
+		token_append(head, new_token(TOK_REDIR_IN, ft_strdup("<")));
+		return (i + 1);
+	}
+	token_append(head, new_token(TOK_REDIR_OUT, ft_strdup(">")));
 	return (i + 1);
 }
 
@@ -98,32 +133,6 @@ static int	read_word(const char *s, int i, t_token **head)
 	return (i);
 }
 
-static int	read_operator(const char *s, int i, t_token **head)
-{
-	if (s[i] == '|')
-	{
-		token_append(head, new_token(TOK_PIPE, ft_strdup("|")));
-		return (i + 1);
-	}
-	if (s[i] == '<' && s[i + 1] == '<')
-	{
-		token_append(head, new_token(TOK_HEREDOC, ft_strdup("<<")));
-		return (i + 2);
-	}
-	if (s[i] == '>' && s[i + 1] == '>')
-	{
-		token_append(head, new_token(TOK_APPEND, ft_strdup(">>")));
-		return (i + 2);
-	}
-	if (s[i] == '<')
-	{
-		token_append(head, new_token(TOK_REDIR_IN, ft_strdup("<")));
-		return (i + 1);
-	}
-	token_append(head, new_token(TOK_REDIR_OUT, ft_strdup(">")));
-	return (i + 1);
-}
-
 t_token	*tokenize(const char *input)
 {
 	t_token	*head;
@@ -144,7 +153,7 @@ t_token	*tokenize(const char *input)
 			if (next_i < 0)
 			{
 				free_tokens(head);
-				return NULL;
+				return (NULL);
 			}
 			i = next_i;
 		}
