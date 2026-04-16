@@ -77,8 +77,12 @@ void    free_tokens(t_token *tok);
 
 /* ── parse ────────────────────────────────────────── */
 int		parse_tokenize_error(char *str, t_shell *shell);
-int		parse_validate_error(t_token *tokens, t_shell *shell);
-t_cmd	*parse_build_cmds(t_token *tokens);
+int		parse_validate_error(t_shell *shell);
+
+int		parse_redir_error(t_shell *shell);
+t_cmd	*parse_build_cmds(t_token *tokens, t_shell *shell);
+//t_cmd	*parse_build_cmds(t_token *tokens);
+
 int		validate_tokens(t_token *tok);
 void    prompt_loop(t_shell *shell);
 t_cmd   *parse_input(char *str, t_shell *shell);
