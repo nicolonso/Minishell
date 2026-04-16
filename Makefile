@@ -36,6 +36,12 @@ SRCS    = main.c \
           utils/ft_split.c \
           utils/ft_strjoin.c \
           utils/ft_calloc.c \
+		  utils/ft_isalpha.c \
+          utils/ft_isalnum.c \
+          utils/ft_isdigit.c \
+          utils/ft_itoa.c \
+          utils/ft_substr.c \
+          utils/ft_memmove.c \
           utils/error.c
 
 SRCS    := $(addprefix $(SRC_DIR), $(SRCS))

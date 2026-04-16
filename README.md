@@ -1,5 +1,5 @@
 # Minishell
-*This project has been created as part of the 42 curriculum by nallfonso.*
+*This project has been created as part of the 42 curriculum by nallfonso, qcyril-a.*
 
 # Minishell
 
