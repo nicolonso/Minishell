@@ -6,13 +6,13 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 18:21:12 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/13 00:00:00 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/13 19:24:13 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static int	count_words(t_token *tok)
+/* static int	count_words(t_token *tok)
 {
 	int	n;
 
@@ -24,7 +24,7 @@ static int	count_words(t_token *tok)
 	}
 	return (n);
 }
-
+ */
 static t_token	*skip_redir(t_token *tok, t_cmd *cmd)
 {
 	t_redir	*redir;
