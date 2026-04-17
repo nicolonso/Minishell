@@ -8,6 +8,7 @@
 # include <stddef.h>
 # include <string.h>
 # include <fcntl.h>
+# include <signal.h>
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -68,13 +69,30 @@ char    *ft_strndup(const char *s, size_t n);
 int     ft_strcmp(char *s1, const char *s2);
 void    ft_free_split(char **arr);
 
+/* ── signals ─────────────────────────────────────── */
+extern volatile sig_atomic_t g_sig;
+void	setup_signals_prompt(void);
+
 /* ── tokenizer ───────────────────────────────────── */
 t_token *tokenize(const char *input);
 void    free_tokens(t_token *tok);
 
 /* ── parse ────────────────────────────────────────── */
-void    prompt_loop(t_shell *shell);
+int		parse_tokenize_error(char *str, t_shell *shell);
+int		parse_validate_error(t_shell *shell);
+
+int		parse_redir_error(t_shell *shell);
+t_cmd	*parse_build_cmds(t_token *tokens, t_shell *shell);
+//t_cmd	*parse_build_cmds(t_token *tokens);
+
+int		validate_tokens(t_token *tok);
+int	    prompt_loop(t_shell *shell);
 t_cmd   *parse_input(char *str, t_shell *shell);
+void	free_cmd(t_cmd *cmd);
+
+/* ── expander ─────────────────────────────────────── */
+int		expand_tokens(t_token *tok, t_shell *shell);
+void	remove_quotes_tokens(t_token *tok);
 
 /* ── env helpers ──────────────────────────────────── */
 char    *get_env_value(t_env *env, char *key);

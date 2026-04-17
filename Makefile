@@ -13,7 +13,13 @@ LIBFT	= ./Lib/libft.a
 SRCS    = main.c \
           parse/prompt_loop.c \
           parse/parse.c \
+          parse/parse_errors.c \
+          parse/parse_build.c \
+          parse/signals.c \
           parse/tokenize.c \
+          parse/token_syntax.c \
+          parse/expand.c \
+          parse/remove_quotes.c \
           execute/executor.c \
           execute/pipeline.c \
           execute/redir.c \
@@ -28,6 +34,16 @@ SRCS    = main.c \
           execute/builtins/exit.c \
           utils/str.c \
           utils/mem.c \
+		  utils/ft_strdup.c \
+          utils/ft_split.c \
+          utils/ft_strjoin.c \
+          utils/ft_calloc.c \
+		  utils/ft_isalpha.c \
+          utils/ft_isalnum.c \
+          utils/ft_isdigit.c \
+          utils/ft_itoa.c \
+          utils/ft_substr.c \
+          utils/ft_memmove.c \
           utils/error.c
 
 SRCS    := $(addprefix $(SRC_DIR), $(SRCS))
