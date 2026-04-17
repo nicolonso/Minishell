@@ -1,5 +1,5 @@
 #include "../../include/minishell.h"
-
+/*
 int	parse_tokenize_error(char *str, t_shell *shell)
 {
 	int	q;
@@ -44,4 +44,4 @@ t_cmd	*parse_build_cmds(t_token *tokens)
 		tail = new;
 	}
 	return (head);
-}
+}*/

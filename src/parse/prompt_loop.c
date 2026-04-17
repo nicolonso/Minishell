@@ -61,8 +61,6 @@ void    prompt_loop(t_shell *shell)
         if (!input)
 		{
 			write(1, "exit\n", 5);
-            //break ;
-			//exit(shell->last_status);
 			exit(shell->exit_status);
         }
 		if (*input)

@@ -90,6 +90,7 @@ void	free_cmd(t_cmd *cmd);
 
 /* ── expander ─────────────────────────────────────── */
 int		expand_tokens(t_token *tok, t_shell *shell);
+void	remove_quotes_tokens(t_token *tok);
 
 /* ── env helpers ──────────────────────────────────── */
 char    *get_env_value(t_env *env, char *key);

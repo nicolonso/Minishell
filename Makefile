@@ -18,6 +18,7 @@ SRCS    = main.c \
           parse/tokenize.c \
           parse/token_syntax.c \
           parse/expand.c \
+          parse/remove_quotes.c \
           execute/executor.c \
           execute/pipeline.c \
           execute/redir.c \

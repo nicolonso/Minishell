@@ -18,9 +18,9 @@ void    ft_free_split(char **arr);
 char    *ft_strndup(const char *s, size_t n);
 
 char	*ft_substr(char const *s, unsigned int start, size_t len);
-int	ft_isalpha(int c);
-int	ft_isalnum(int c);
-int	ft_isdigit(int c);
+int		ft_isalpha(int c);
+int		ft_isalnum(int c);
+int		ft_isdigit(int c);
 char	*ft_itoa(int n);
 size_t	ft_strlen(const char *s);
 
