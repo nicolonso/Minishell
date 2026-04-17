@@ -74,6 +74,7 @@ void	setup_signals_prompt(void);
 /* ── tokenizer ───────────────────────────────────── */
 t_token *tokenize(const char *input);
 void    free_tokens(t_token *tok);
+void	remove_empty_words(t_token **head);
 
 /* ── parse ────────────────────────────────────────── */
 int		parse_tokenize_error(char *str, t_shell *shell);

@@ -6,11 +6,16 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 21:07:26 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/12 21:43:30 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/17 06:30:54 by quintondell      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/libft.h"
+
+int	is_empty_str(const char *s)
+{
+	return (!s || s[0] == '\0');
+}
 
 size_t	ft_strlen(const char *s)
 {
