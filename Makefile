@@ -3,6 +3,7 @@ CC      = cc
 CFLAGS  = -Wall -Wextra -Werror -I include
 RM      = rm -rf
 LIBS    = -lreadline 
+MAKEFLAGS += --no-print-directory
 
 # Directories
 SRC_DIR = src/
@@ -44,7 +45,7 @@ OBJS    = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRCS))
 all: $(NAME)
 
 $(LIBFT):
-					@make -C ./Lib
+					@make -C ./Lib/
 
 $(NAME): $(OBJS) $(LIBFT)
 	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME) $(LIBFT)
