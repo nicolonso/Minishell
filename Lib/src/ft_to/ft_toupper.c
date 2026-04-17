@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalnum.c                                       :+:      :+:    :+:   */
+/*   ft_toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: quintondell <marvin@42.fr>                 +#+  +:+       +#+        */
+/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/25 00:08:33 by quintondell       #+#    #+#             */
-/*   Updated: 2026/02/25 00:11:58 by quintondell      ###   ########.fr       */
+/*   Created: 2025/04/10 20:45:04 by nalfonso          #+#    #+#             */
+/*   Updated: 2025/08/12 19:05:36 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../hdr/libft.h"
 
-int	ft_isalnum(int c)
+int	ft_toupper(int c)
 {
-	if (ft_isalpha(c) || ft_isdigit(c))
-		return (1);
-	return (0);
+	if (c >= 'a' && c <= 'z')
+		c -= 32;
+	return (c);
 }

@@ -1,21 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isdigit.c                                       :+:      :+:    :+:   */
+/*   ft_isprint.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: quintondell <marvin@42.fr>                 +#+  +:+       +#+        */
+/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/24 21:13:11 by quintondell       #+#    #+#             */
-/*   Updated: 2026/02/25 01:16:38 by quintondell      ###   ########.fr       */
+/*   Created: 2025/04/10 20:35:53 by nalfonso          #+#    #+#             */
+/*   Updated: 2025/08/12 19:03:06 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../hdr/libft.h"
 
-int	ft_isdigit(int c)
+int	ft_isprint(int c)
 {
-//	if ((unsigned char)c >= 48 && (unsigned char)c <= 57)
-	if (c >= 48 && c <= 57)
-		return (1);
-	return (0);
+	if (c < 32 || c > 126)
+		return (0);
+	return (1);
 }

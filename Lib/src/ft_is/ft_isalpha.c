@@ -3,18 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isalpha.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: quintondell <marvin@42.fr>                 +#+  +:+       +#+        */
+/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/24 21:41:13 by quintondell       #+#    #+#             */
-/*   Updated: 2026/02/25 01:17:38 by quintondell      ###   ########.fr       */
+/*   Created: 2025/04/10 20:36:35 by nalfonso          #+#    #+#             */
+/*   Updated: 2025/08/12 19:02:49 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../hdr/libft.h"
 
 int	ft_isalpha(int c)
 {
-	if ((c >= 65 && c <= 90) || (c >= 97 && c <= 122))
-		return (1);
-	return (0);
+	if (c < 'A' || (c > 'Z' && c < 'a') || c > 'z')
+		return (0);
+	return (1);
 }
+/*int main()
+{
+	printf("A: %d\n", ft_isalpha('A'));  // Expected: 1
+	printf("M: %d\n", ft_isalpha('M'));  // Expected: 1
+	printf("Z: %d\n", ft_isalpha('Z'));
+	return (0);
+}*/

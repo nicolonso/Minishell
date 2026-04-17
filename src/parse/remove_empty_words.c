@@ -1,12 +1,12 @@
 
 #include "../../include/minishell.h"
-/*
+
 static int	is_empty_str(const char *s)
 {
 	if (!s)
 		return (1);
 	return (s[0] == '\0');
-}*/
+}
 
 static void	remove_one(t_token **head, t_token *prev, t_token *cur)
 {

@@ -12,7 +12,7 @@
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-
+# include "../Lib/hdr/libft.h"
 
 /* ── structs ──────────────────────────────────────── */
 typedef struct s_env
@@ -65,7 +65,9 @@ typedef struct s_token
 # define HEREDOC       4
 
 /* ── libft ────────────────────────────────────────── */
-# include "libft.h"
+char    *ft_strndup(const char *s, size_t n);
+int     ft_strcmp(char *s1, const char *s2);
+void    ft_free_split(char **arr);
 
 /* ── signals ─────────────────────────────────────── */
 extern volatile sig_atomic_t g_sig;

@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 21:07:26 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/17 06:30:54 by quintondell      ###   ########.fr       */
+/*   Updated: 2026/04/17 21:14:26 by quintondell      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	is_empty_str(const char *s)
 {
 	return (!s || s[0] == '\0');
 }
-
+/*
 size_t	ft_strlen(const char *s)
 {
     size_t  i;
@@ -26,7 +26,7 @@ size_t	ft_strlen(const char *s)
         i++;
     return (i);
 }
-
+*/
 int		ft_strcmp(char *s1, const char *s2)
 {
     size_t  i;
@@ -39,49 +39,7 @@ int		ft_strcmp(char *s1, const char *s2)
     return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
-char    *ft_strchr(const char *s, int c)
-{
-    while (*s)
-    {
-        if (*s == (char)c)
-            return ((char *)s);
-        s++;
-    }
-    if ((char)c == '\0')
-        return ((char *)s);
-    return (NULL);
-}
-
-// ft_bzero — needed by ft_calloc
-void    ft_bzero(void *s, size_t n)
-{
-    unsigned char *ptr;
-
-    ptr = (unsigned char *)s;
-    while (n--)
-        *ptr++ = 0;
-}
-
 // ft_strlcat — needed by ft_strjoin
-size_t  ft_strlcat(char *dst, const char *src, size_t size)
-{
-    size_t  dlen;
-    size_t  slen;
-    size_t  i;
-
-    dlen = ft_strlen(dst);
-    slen = ft_strlen((char *)src);
-    if (size <= dlen)
-        return (size + slen);
-    i = 0;
-    while (src[i] && (dlen + i) < (size - 1))
-    {
-        dst[dlen + i] = src[i];
-        i++;
-    }
-    dst[dlen + i] = '\0';
-    return (dlen + slen);
-}
 
 void    ft_free_split(char **arr)
 {
