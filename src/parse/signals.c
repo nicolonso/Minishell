@@ -1,34 +1,28 @@
 #include "../../include/minishell.h"
 
-volatile sig_atomic_t g_sig = 0;
+volatile sig_atomic_t	g_sig = 0;
 
-void	sigint_handler(int signum)
+static void	sigint_prompt(int signum)
 {
-	g_sig = signum;
+	(void)signum;
+	g_sig = SIGINT;
+	write(1, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
 }
 
-static int	rl_sigint_hook(void)
+void	setup_signals_prompt(void)
 {
-	if (g_sig == SIGINT)
-	{
-		rl_done = 1;
-		return 0;
-	}
-	return 0;
-}
+	struct sigaction	sa;
 
-void setup_signals_prompt(void)
-{
-	struct sigaction sa;
-
-	rl_catch_signals = 0;
-	rl_event_hook = rl_sigint_hook;
+	rl_catch_signals = 0;   /* we manage signals ourselves */
+	rl_event_hook = NULL;  /* don't depend on it */
 
 	sigemptyset(&sa.sa_mask);
-	sa.sa_handler = sigint_handler;
-	sa.sa_flags = 0;
+	sa.sa_handler = sigint_prompt;
+	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
 
 	signal(SIGQUIT, SIG_IGN);
 }
-

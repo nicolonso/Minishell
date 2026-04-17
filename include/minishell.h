@@ -84,7 +84,7 @@ t_cmd	*parse_build_cmds(t_token *tokens, t_shell *shell);
 //t_cmd	*parse_build_cmds(t_token *tokens);
 
 int		validate_tokens(t_token *tok);
-void    prompt_loop(t_shell *shell);
+int	    prompt_loop(t_shell *shell);
 t_cmd   *parse_input(char *str, t_shell *shell);
 void	free_cmd(t_cmd *cmd);
 

@@ -41,6 +41,13 @@ Execute the commands
 Tutorial - Write a Shell in C
 https://brennan.io/2015/01/16/write-a-shell-in-c/?utm_source=chatgpt.com
 
+So parse flow becomes:
+
+    tokenize (keeps quotes)
+    validate
+    expand
+    remove quotes
+    build cmds
 
 
 -------------------------------------------------------------------
