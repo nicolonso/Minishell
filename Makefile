@@ -2,13 +2,14 @@ NAME    = minishell
 CC      = cc
 CFLAGS  = -Wall -Wextra -Werror -I include
 RM      = rm -rf
-LIBS    = -lreadline
+LIBS    = -lreadline 
 
 # Directories
 SRC_DIR = src/
 OBJ_DIR = obj/
+LIBFT	= ./Lib/libft.a
 
-# Sources — add new files here as you create them
+# Sources 
 SRCS    = main.c \
           parse/prompt_loop.c \
           parse/parse.c \
@@ -51,8 +52,11 @@ OBJS    = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRCS))
 # Rules
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
+$(LIBFT):
+					@make -C ./Lib
+
+$(NAME): $(OBJS) $(LIBFT)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME) $(LIBFT)
 	@echo "minishell compiled"
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
@@ -61,9 +65,11 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 
 clean:
 	@$(RM) $(OBJ_DIR)
+	@make clean -C ./Lib
 
 fclean: clean
 	@$(RM) $(NAME)
+	@$(RM) $(LIBFT)
 
 re: fclean all
 
