@@ -3,6 +3,7 @@ CC      = cc
 CFLAGS  = -Wall -Wextra -Werror -I include
 RM      = rm -rf
 LIBS    = -lreadline 
+MAKEFLAGS += --no-print-directory
 
 # Directories
 SRC_DIR = src/
@@ -20,6 +21,7 @@ SRCS    = main.c \
           parse/token_syntax.c \
           parse/expand.c \
           parse/remove_quotes.c \
+          parse/remove_empty_words.c \
           execute/executor.c \
           execute/pipeline.c \
           execute/redir.c \
@@ -34,16 +36,6 @@ SRCS    = main.c \
           execute/builtins/exit.c \
           utils/str.c \
           utils/mem.c \
-		  utils/ft_strdup.c \
-          utils/ft_split.c \
-          utils/ft_strjoin.c \
-          utils/ft_calloc.c \
-		  utils/ft_isalpha.c \
-          utils/ft_isalnum.c \
-          utils/ft_isdigit.c \
-          utils/ft_itoa.c \
-          utils/ft_substr.c \
-          utils/ft_memmove.c \
           utils/error.c
 
 SRCS    := $(addprefix $(SRC_DIR), $(SRCS))
@@ -53,7 +45,7 @@ OBJS    = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRCS))
 all: $(NAME)
 
 $(LIBFT):
-					@make -C ./Lib
+					@make -C ./Lib/
 
 $(NAME): $(OBJS) $(LIBFT)
 	@$(CC) $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME) $(LIBFT)

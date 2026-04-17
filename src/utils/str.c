@@ -6,12 +6,27 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 21:07:26 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/17 10:52:28 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/17 21:14:26 by quintondell      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/libft.h"
 
+int	is_empty_str(const char *s)
+{
+	return (!s || s[0] == '\0');
+}
+/*
+size_t	ft_strlen(const char *s)
+{
+    size_t  i;
+
+    i = 0;
+    while (s[i])
+        i++;
+    return (i);
+}
+*/
 int		ft_strcmp(char *s1, const char *s2)
 {
     size_t  i;
