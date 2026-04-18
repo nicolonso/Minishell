@@ -14,6 +14,7 @@ SRCS    = main.c \
           parse/prompt_loop.c \
           parse/parse.c \
           parse/tokenize.c \
+          parse/signals.c \
           execute/executor.c \
           execute/pipeline.c \
           execute/redir.c \

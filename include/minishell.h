@@ -8,10 +8,14 @@
 # include <stddef.h>
 # include <string.h>
 # include <fcntl.h>
+# include <signal.h>
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../Lib/hdr/libft.h"
+
+/* ── global signal flag (only 1 global allowed by norm) ── */
+extern int	g_sig;
 
 /* ── structs ──────────────────────────────────────── */
 typedef struct s_env
@@ -72,6 +76,11 @@ void    ft_free_split(char **arr);
 t_token *tokenize(const char *input);
 void    free_tokens(t_token *tok);
 
+/* ── signals ──────────────────────────────────────── */
+void    setup_signals_prompt(void);
+void    setup_signals_exec(void);
+void    setup_signals_child(void);
+
 /* ── parse ────────────────────────────────────────── */
 void    prompt_loop(t_shell *shell);
 t_cmd   *parse_input(char *str, t_shell *shell);
@@ -80,6 +89,7 @@ t_cmd   *parse_input(char *str, t_shell *shell);
 char    *get_env_value(t_env *env, char *key);
 void    update_env_value(t_env *env, char *key, char *value);
 char    **env_to_arr(t_env *env);
+void    free_env(t_env *env);
 
 /* ── builtins ─────────────────────────────────────── */
 int     ft_built_cd(char **av, t_shell *shell);

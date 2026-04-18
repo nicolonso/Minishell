@@ -26,39 +26,47 @@
 	return (0);
 } */
 
-static t_env   *build_env(char **envp)
+static void	add_env_node(t_env **head, t_env **last, char *entry)
 {
-    t_env   *head;
-    t_env   *node;
-    t_env   *last;
-    char    *eq;
-    int     i;
+	t_env	*node;
+	char	*eq;
 
-    head = NULL;
-    last = NULL;
-    i = 0;
-    while (envp[i])
-    {
-        node = ft_calloc(1, sizeof(t_env));
-        eq = ft_strchr(envp[i], '=');
-        if (eq)
-        {
-            node->key   = ft_strndup(envp[i], eq - envp[i]);
-            node->value = ft_strdup(eq + 1);
-        }
-        else
-            node->key = ft_strdup(envp[i]);
-        if (!head)
-            head = node;
-        else
-            last->next = node;
-        last = node;
-        i++;
-    }
-    return (head);
+	node = ft_calloc(1, sizeof(t_env));
+	if (!node)
+		return ;
+	eq = ft_strchr(entry, '=');
+	if (eq)
+	{
+		node->key = ft_strndup(entry, eq - entry);
+		node->value = ft_strdup(eq + 1);
+	}
+	else
+		node->key = ft_strdup(entry);
+	if (!*head)
+		*head = node;
+	else
+		(*last)->next = node;
+	*last = node;
 }
 
-void    free_env(t_env *env)
+static t_env	*build_env(char **envp)
+{
+	t_env	*head;
+	t_env	*last;
+	int		i;
+
+	head = NULL;
+	last = NULL;
+	i = 0;
+	while (envp[i])
+	{
+		add_env_node(&head, &last, envp[i]);
+		i++;
+	}
+	return (head);
+}
+
+void	free_env(t_env *env)
 {
     t_env   *next;
 
