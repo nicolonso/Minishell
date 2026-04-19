@@ -1,9 +1,23 @@
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 static int	is_redir_token(int type)
 {
 	return (type == TOK_REDIR_IN || type == TOK_REDIR_OUT
 		|| type == TOK_APPEND || type == TOK_HEREDOC);
+}
+
+static int	has_double_pipe(t_token *tok)
+{
+	if (tok->type == TOK_PIPE && tok->next && tok->next->type == TOK_PIPE)
+		return (1);
+	return (0);
+}
+
+static int	redir_has_target(t_token *tok)
+{
+	if (!tok->next || tok->next->type != TOK_WORD)
+		return (0);
+	return (1);
 }
 
 int	validate_tokens(t_token *tok)
@@ -12,28 +26,19 @@ int	validate_tokens(t_token *tok)
 
 	if (!tok)
 		return (0);
-
 	if (tok->type == TOK_PIPE)
 		return (-1);
-
 	prev = NULL;
 	while (tok)
 	{
-		if (tok->type == TOK_PIPE && tok->next && tok->next->type == TOK_PIPE)
+		if (has_double_pipe(tok))
 			return (-1);
-
-		if (is_redir_token(tok->type))
-		{
-			if (!tok->next || tok->next->type != TOK_WORD)
-				return (-1);
-		}
-
+		if (is_redir_token(tok->type) && !redir_has_target(tok))
+			return (-1);
 		prev = tok;
 		tok = tok->next;
 	}
-
 	if (prev && prev->type == TOK_PIPE)
 		return (-1);
-
 	return (0);
 }

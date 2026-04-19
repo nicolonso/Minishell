@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: qcyril-a <qcyril-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 23:27:21 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/19 13:15:26 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/19 18:53:20 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ typedef struct s_token
 void	ft_free_split(char **arr);
 char	*ft_strndup(const char *s, size_t n);
 int		ft_strcmp(char *s1, const char *s2);
-int		is_empty_str(const char *s);
 
 /* ── env build ─────────────────────────────────── */
 t_env	*build_env(char **envp);

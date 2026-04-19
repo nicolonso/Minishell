@@ -1,7 +1,7 @@
+#include "minishell.h"
+#include "parse_internal.h"
 
-#include "../../include/minishell.h"
-
-int	is_empty_str(const char *s)
+static int	is_empty_str(const char *s)
 {
 	if (!s)
 		return (1);
@@ -44,4 +44,3 @@ void	remove_empty_words(t_token **head)
 		}
 	}
 }
-

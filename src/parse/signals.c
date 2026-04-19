@@ -1,4 +1,4 @@
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 volatile sig_atomic_t	g_sig = 0;
 
@@ -18,12 +18,10 @@ void	setup_signals_prompt(void)
 
 	rl_catch_signals = 0;
 	rl_event_hook = NULL;
-
 	sigemptyset(&sa.sa_mask);
 	sa.sa_handler = sigint_prompt;
 	sa.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa, NULL);
-
 	signal(SIGQUIT, SIG_IGN);
 }
 

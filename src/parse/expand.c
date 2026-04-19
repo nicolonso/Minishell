@@ -1,96 +1,47 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/16 20:21:01 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/19 16:13:17 by qcyril-a         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "minishell.h"
+#include "parse_internal.h"
 
-#include "../../include/minishell.h"
-
-static char	*str_join_free(char *dst, char *add)
+static int	update_quote_state(int state, char c)
 {
-	char	*tmp;
-
-	if (!dst || !add)
-		return (free(dst), free(add), NULL);
-	tmp = ft_strjoin(dst, add);
-	free(dst);
-	free(add);
-	return (tmp);
-}
-
-static int	is_name_start(char c)
-{
-	return (ft_isalpha((unsigned char)c) || c == '_');
-}
-
-static int	is_name_char(char c)
-{
-	return (ft_isalnum((unsigned char)c) || c == '_');
-}
-
-static char	*itoa_status(int st)
-{
-	char	buf[32];
-
-	snprintf(buf, sizeof(buf), "%d", st);
-	return (ft_strdup(buf));
-}
-
-static char	*dup_key_range(const char *s, int start, int end)
-{
-	char	*key;
-
-	key = ft_strdup("");
-	if (!key)
-		return (NULL);
-	while (start < end)
+	if (state == 0 && (c == '\'' || c == '"'))
 	{
-		char	tmp[2];
-
-		tmp[0] = s[start++];
-		tmp[1] = '\0';
-		key = str_join_free(key, ft_strdup(tmp));
-		if (!key)
-			return (NULL);
+		if (c == '\'')
+			return (1);
+		return (2);
 	}
-	return (key);
+	if (state == 1 && c == '\'')
+		return (0);
+	if (state == 2 && c == '"')
+		return (0);
+	return (state);
 }
 
 static char	*expand_braced(const char *s, int *i, t_shell *shell)
 {
 	int		start;
 	int		end;
+	int		j;
 	char	*name;
 	char	*val;
 
-	(*i)++; /* skip '{' */
+	(*i)++;
 	start = *i;
 	while (s[*i] && s[*i] != '}')
 		(*i)++;
 	if (s[*i] != '}')
 		return (ft_strdup("$"));
 	end = *i;
-	(*i)++; /* skip '}' */
+	(*i)++;
 	if (end <= start)
 		return (ft_strdup(""));
 	if (!is_name_start(s[start]))
 		return (ft_strdup(""));
+	j = start;
+	while (j < end)
 	{
-		int	j;
-
-		j = start;
-		while (j < end)
-		{
-			if (!is_name_char(s[j]))
-				return (ft_strdup(""));
-			j++;
-		}
+		if (!is_name_char(s[j]))
+			return (ft_strdup(""));
+		j++;
 	}
 	name = dup_key_range(s, start, end);
 	if (!name)
@@ -108,7 +59,7 @@ static char	*expand_one_var(const char *s, int *i, t_shell *shell)
 	char	*name;
 	char	*val;
 
-	(*i)++; /* skip '$' */
+	(*i)++;
 	if (s[*i] == '?')
 	{
 		(*i)++;
@@ -131,13 +82,20 @@ static char	*expand_one_var(const char *s, int *i, t_shell *shell)
 	return (ft_strdup(val));
 }
 
-/* state: 0 = none, 1 = single-quoted, 2 = double-quoted */
+static char	*append_char(char *out, char c)
+{
+	char	chunk[2];
+
+	chunk[0] = c;
+	chunk[1] = '\0';
+	return (str_join_free(out, ft_strdup(chunk)));
+}
+
 static char	*expand_word(const char *s, t_shell *shell)
 {
 	int		i;
 	int		state;
 	char	*out;
-	char	chunk[2];
 	char	*rep;
 
 	i = 0;
@@ -147,12 +105,7 @@ static char	*expand_word(const char *s, t_shell *shell)
 		return (NULL);
 	while (s[i])
 	{
-		if (state == 0 && (s[i] == '\'' || s[i] == '"'))
-			state = (s[i] == '\'') ? 1 : 2;
-		else if (state == 1 && s[i] == '\'')
-			state = 0;
-		else if (state == 2 && s[i] == '"')
-			state = 0;
+		state = update_quote_state(state, s[i]);
 		if (s[i] == '$' && state != 1)
 		{
 			rep = expand_one_var(s, &i, shell);
@@ -161,11 +114,10 @@ static char	*expand_word(const char *s, t_shell *shell)
 				return (NULL);
 			continue ;
 		}
-		chunk[0] = s[i++];
-		chunk[1] = '\0';
-		out = str_join_free(out, ft_strdup(chunk));
+		out = append_char(out, s[i]);
 		if (!out)
 			return (NULL);
+		i++;
 	}
 	return (out);
 }

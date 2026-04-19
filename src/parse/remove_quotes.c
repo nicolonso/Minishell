@@ -1,74 +1,52 @@
-#include "../../include/minishell.h"
+#include "minishell.h"
 
-static char	*str_join_free(char *dst, char *add)
+static int	is_empty_str(const char *s)
 {
-	char	*tmp;
-
-	if (!dst || !add)
-		return (free(dst), free(add), NULL);
-	tmp = ft_strjoin(dst, add);
-	free(dst);
-	free(add);
-	return (tmp);
+	if (!s)
+		return (1);
+	return (s[0] == '\0');
 }
 
-/* state: 0 none, 1 single, 2 double */
-static char	*remove_quotes_word(const char *s)
+static void	remove_one(t_token **head, t_token *prev, t_token *cur)
 {
-	int		i;
-	int		state;
-	char	*out;
-	char	tmp[2];
+	t_token	*next;
 
-	i = 0;
-	state = 0;
-	out = ft_strdup("");
-	if (!out)
-		return (NULL);
-	while (s[i])
-	{
-		if (state == 0 && (s[i] == '\'' || s[i] == '"'))
-		{
-			state = (s[i] == '\'') ? 1 : 2;
-			i++;
-			continue ;
-		}
-		if (state == 1 && s[i] == '\'')
-		{
-			state = 0;
-			i++;
-			continue ;
-		}
-		if (state == 2 && s[i] == '"')
-		{
-			state = 0;
-			i++;
-			continue ;
-		}
-		tmp[0] = s[i++];
-		tmp[1] = '\0';
-		out = str_join_free(out, ft_strdup(tmp));
-		if (!out)
-			return (NULL);
-	}
-	return (out);
+	next = cur->next;
+	if (prev)
+		prev->next = next;
+	else
+		*head = next;
+	free(cur->value);
+	free(cur);
 }
 
-void	remove_quotes_tokens(t_token *tok)
+static t_token	*after_remove(t_token **head, t_token *prev)
 {
-	char	*newv;
+	if (prev)
+		return (prev->next);
+	return (*head);
+}
 
-	while (tok)
+void	remove_empty_words(t_token **head)
+{
+	t_token	*cur;
+	t_token	*prev;
+
+	if (!head)
+		return ;
+	prev = NULL;
+	cur = *head;
+	while (cur)
 	{
-		if (tok->type == TOK_WORD && tok->value)
+		if (cur->type == TOK_WORD && is_empty_str(cur->value))
 		{
-			newv = remove_quotes_word(tok->value);
-			if (newv)
-			{
-				free(tok->value);
-				tok->value = newv;
-			}
+			remove_one(head, prev, cur);
+			cur = after_remove(head, prev);
 		}
-		tok = tok->next;
+		else
+		{
+			prev = cur;
+			cur = cur->next;
+		}
 	}
 }

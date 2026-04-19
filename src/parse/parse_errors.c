@@ -1,16 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parse_errors.c                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/16 19:54:35 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/19 16:18:19 by qcyril-a         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 static int	unclosed_quote(char *s)
 {
@@ -30,14 +18,21 @@ static int	unclosed_quote(char *s)
 	return (q);
 }
 
+static void	put_eof_quote_error(char q)
+{
+	ft_putstr_fd("minishell: syntax error: unexpected EOF ", 2);
+	ft_putstr_fd("while looking for matching '", 2);
+	ft_putchar_fd(q, 2);
+	ft_putstr_fd("'\n", 2);
+}
+
 int	parse_tokenize_error(char *str, t_shell *shell)
 {
 	int	q;
 
 	q = unclosed_quote(str);
 	if (q)
-		ft_putstr_fd(
-			"minishell: syntax error: unexpected EOF while looking for matching '%c'\n", 2);
+		put_eof_quote_error((char)q);
 	else
 		ft_putstr_fd("minishell: syntax error\n", 2);
 	shell->exit_status = 2;

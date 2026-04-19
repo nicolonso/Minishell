@@ -1,44 +1,5 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   tokenize.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/13 00:00:00 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/17 06:34:20 by quintondell      ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "../../include/minishell.h"
-
-static t_token	*new_token(int type, char *value)
-{
-	t_token	*tok;
-
-	tok = ft_calloc(1, sizeof(t_token));
-	if (!tok)
-		return (NULL);
-	tok->type = type;
-	tok->value = value;
-	tok->next = NULL;
-	return (tok);
-}
-
-static void	token_append(t_token **head, t_token *new)
-{
-	t_token	*cur;
-
-	if (!*head)
-	{
-		*head = new;
-		return ;
-	}
-	cur = *head;
-	while (cur->next)
-		cur = cur->next;
-	cur->next = new;
-}
+#include "minishell.h"
+#include "parse_internal.h"
 
 void	free_tokens(t_token *tok)
 {
@@ -53,51 +14,29 @@ void	free_tokens(t_token *tok)
 	}
 }
 
-static int	read_quoted(const char *s, int i, char *buf, int *len)
-{
-	char	quote;
-
-	quote = s[i];
-	if (*len >= 4095)
-		return (-1);
-	buf[(*len)++] = s[i++];
-	while (s[i] && s[i] != quote)
-	{
-		if (*len >= 4095)
-			return (-1);
-		buf[(*len)++] = s[i++];
-	}
-	if (s[i] != quote)
-		return (-1);
-	if (*len >= 4095)
-		return (-1);
-	buf[(*len)++] = s[i++];
-	return (i);
-}
-
 static int	read_operator(const char *s, int i, t_token **head)
 {
 	if (s[i] == '|')
 	{
-		token_append(head, new_token(TOK_PIPE, ft_strdup("|")));
+		tok_append(head, tok_new(TOK_PIPE, ft_strdup("|")));
 		return (i + 1);
 	}
 	if (s[i] == '<' && s[i + 1] == '<')
 	{
-		token_append(head, new_token(TOK_HEREDOC, ft_strdup("<<")));
+		tok_append(head, tok_new(TOK_HEREDOC, ft_strdup("<<")));
 		return (i + 2);
 	}
 	if (s[i] == '>' && s[i + 1] == '>')
 	{
-		token_append(head, new_token(TOK_APPEND, ft_strdup(">>")));
+		tok_append(head, tok_new(TOK_APPEND, ft_strdup(">>")));
 		return (i + 2);
 	}
 	if (s[i] == '<')
 	{
-		token_append(head, new_token(TOK_REDIR_IN, ft_strdup("<")));
+		tok_append(head, tok_new(TOK_REDIR_IN, ft_strdup("<")));
 		return (i + 1);
 	}
-	token_append(head, new_token(TOK_REDIR_OUT, ft_strdup(">")));
+	tok_append(head, tok_new(TOK_REDIR_OUT, ft_strdup(">")));
 	return (i + 1);
 }
 
@@ -126,7 +65,7 @@ static int	read_word(const char *s, int i, t_token **head)
 		}
 	}
 	buf[len] = '\0';
-	token_append(head, new_token(TOK_WORD, ft_strdup(buf)));
+	tok_append(head, tok_new(TOK_WORD, ft_strdup(buf)));
 	return (i);
 }
 

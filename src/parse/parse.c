@@ -1,34 +1,27 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   parse.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: qcyril-a <qcyril-a@student.42lisboa.com    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/13 18:21:12 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/19 18:09:28 by qcyril-a         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 
-static const char *redir_type_name(int type)
+static const char	*redir_type_name(int type)
 {
-	if (type == REDIR_IN)     return "REDIR_IN (<)";
-	if (type == REDIR_OUT)    return "REDIR_OUT (>)";
-	if (type == REDIR_APPEND) return "REDIR_APPEND (>>)";
-	if (type == HEREDOC)      return "HEREDOC (<<)";
-	return "UNKNOWN_REDIR";
+	if (type == REDIR_IN)
+		return ("REDIR_IN (<)");
+	if (type == REDIR_OUT)
+		return ("REDIR_OUT (>)");
+	if (type == REDIR_APPEND)
+		return ("REDIR_APPEND (>>)");
+	if (type == HEREDOC)
+		return ("HEREDOC (<<)");
+	return ("UNKNOWN_REDIR");
 }
 
-static void put_argv(char **av)
+static void	put_argv(char **av)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!av)
 	{
 		printf("(null)\n");
-		return;
+		return ;
 	}
 	while (av[i])
 	{
@@ -40,14 +33,15 @@ static void put_argv(char **av)
 	printf("\n");
 }
 
-static void put_redirs(t_redir *r)
+static void	put_redirs(t_redir *r)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!r)
 	{
 		printf("  redirs: (none)\n");
-		return;
+		return ;
 	}
 	printf("  redirs:\n");
 	while (r)
@@ -60,10 +54,11 @@ static void put_redirs(t_redir *r)
 	}
 }
 
-void ft_putcmds(t_cmd *cmds)
+void	ft_putcmds(t_cmd *cmds)
 {
-	int n = 0;
+	int	n;
 
+	n = 0;
 	printf("!!ft_putcmds here!!\n");
 	while (cmds)
 	{
@@ -88,13 +83,11 @@ t_cmd	*parse_input(char *str, t_shell *shell)
 	if (validate_tokens(tokens) != 0)
 		return (free_tokens(tokens), parse_validate_error(shell), NULL);
 	if (expand_tokens(tokens, shell) != 0)
-	return (free_tokens(tokens), NULL);
+		return (free_tokens(tokens), NULL);
 	remove_quotes_tokens(tokens);
 	remove_empty_words(&tokens);
 	cmds = parse_build_cmds(tokens, shell);
 	free_tokens(tokens);
-//	/*
 	ft_putcmds(cmds);
-//	*/
 	return (cmds);
 }
