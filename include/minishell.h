@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 23:27:21 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/19 19:50:32 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/19 19:59:57 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <string.h>
 # include <fcntl.h>
 # include <signal.h>
-#include <ctype.h>
+# include <ctype.h>
 # include <sys/wait.h>
 # include <readline/readline.h>
 # include <readline/history.h>
