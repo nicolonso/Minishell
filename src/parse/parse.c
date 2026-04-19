@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: qcyril-a <qcyril-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/19 19:18:14 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/19 19:18:31 by qcyril-a         ###   ########.fr       */
+/*   Created: 2026/04/19 19:39:34 by qcyril-a          #+#    #+#             */
+/*   Updated: 2026/04/19 19:42:12 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "parse_internal.h"
 
 static const char	*redir_type_name(int type)
 {
@@ -23,6 +24,13 @@ static const char	*redir_type_name(int type)
 	if (type == HEREDOC)
 		return ("HEREDOC (<<)");
 	return ("UNKNOWN_REDIR");
+}
+
+static const char	*safe_str(const char *s)
+{
+	if (s)
+		return (s);
+	return ("(null)");
 }
 
 static void	put_argv(char **av)
@@ -60,7 +68,7 @@ static void	put_redirs(t_redir *r)
 	{
 		printf("    - #%d type=%s (%d) file=\"%s\"\n",
 			i, redir_type_name(r->type), r->type,
-			(r->file ? r->file : "(null)"));
+			safe_str(r->file));
 		r = r->next;
 		i++;
 	}
@@ -100,6 +108,8 @@ t_cmd	*parse_input(char *str, t_shell *shell)
 	remove_empty_words(&tokens);
 	cmds = parse_build_cmds(tokens, shell);
 	free_tokens(tokens);
+//	/*
 	ft_putcmds(cmds);
+//	*/
 	return (cmds);
 }

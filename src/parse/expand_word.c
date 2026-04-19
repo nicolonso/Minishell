@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/19 19:21:55 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/19 19:26:39 by qcyril-a         ###   ########.fr       */
+/*   Created: 2026/04/19 19:36:46 by qcyril-a          #+#    #+#             */
+/*   Updated: 2026/04/19 19:36:48 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,31 @@ static char	*append_char(char *out, char c)
 	return (str_join_free(out, ft_strdup(chunk)));
 }
 
+static char	*handle_dollar(const char *s, int *i, t_shell *shell, char *out)
+{
+	char	*rep;
+
+	rep = expand_one_var(s, i, shell);
+	out = str_join_free(out, rep);
+	if (!out)
+		return (NULL);
+	return (out);
+}
+
+static char	*step(const char *s, int *i, char *out)
+{
+	out = append_char(out, s[*i]);
+	if (!out)
+		return (NULL);
+	(*i)++;
+	return (out);
+}
+
 char	*expand_word_impl(const char *s, t_shell *shell)
 {
 	int		i;
 	int		state;
 	char	*out;
-	char	*rep;
 
 	i = 0;
 	state = 0;
@@ -53,17 +72,11 @@ char	*expand_word_impl(const char *s, t_shell *shell)
 	{
 		state = update_quote_state(state, s[i]);
 		if (s[i] == '$' && state != 1)
-		{
-			rep = expand_one_var(s, &i, shell);
-			out = str_join_free(out, rep);
-			if (!out)
-				return (NULL);
-			continue ;
-		}
-		out = append_char(out, s[i]);
+			out = handle_dollar(s, &i, shell, out);
+		else
+			out = step(s, &i, out);
 		if (!out)
 			return (NULL);
-		i++;
 	}
 	return (out);
 }

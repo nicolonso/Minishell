@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   remove_empty_words.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: qcyril-a <qcyril-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/19 19:20:25 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/19 19:20:26 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/19 19:39:04 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "parse_internal.h"
 
-static int	is_empty_str(const char *s)
+int	is_empty_str(const char *s)
 {
 	if (!s)
 		return (1);
@@ -33,6 +32,13 @@ static void	remove_one(t_token **head, t_token *prev, t_token *cur)
 	free(cur);
 }
 
+static t_token	*after_remove(t_token **head, t_token *prev)
+{
+	if (prev)
+		return (prev->next);
+	return (*head);
+}
+
 void	remove_empty_words(t_token **head)
 {
 	t_token	*cur;
@@ -47,7 +53,7 @@ void	remove_empty_words(t_token **head)
 		if (cur->type == TOK_WORD && is_empty_str(cur->value))
 		{
 			remove_one(head, prev, cur);
-			cur = (prev != NULL) ? prev->next : *head;
+			cur = after_remove(head, prev);
 		}
 		else
 		{
