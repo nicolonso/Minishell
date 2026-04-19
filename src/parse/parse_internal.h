@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_internal.h                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/19 19:15:53 by qcyril-a          #+#    #+#             */
+/*   Updated: 2026/04/19 19:24:53 by qcyril-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PARSE_INTERNAL_H
 # define PARSE_INTERNAL_H
 
@@ -25,5 +37,7 @@ int		is_name_char(char c);
 char	*str_join_free(char *dst, char *add);
 char	*itoa_status(int st);
 char	*dup_key_range(const char *s, int start, int end);
+char	*expand_word_impl(const char *s, t_shell *shell);
+char	*expand_one_var(const char *s, int *i, t_shell *shell);
 
 #endif
