@@ -3,14 +3,79 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: qcyril-a <qcyril-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 18:21:12 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/17 06:39:15 by quintondell      ###   ########.fr       */
+/*   Updated: 2026/04/19 18:09:28 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
+
+static const char *redir_type_name(int type)
+{
+	if (type == REDIR_IN)     return "REDIR_IN (<)";
+	if (type == REDIR_OUT)    return "REDIR_OUT (>)";
+	if (type == REDIR_APPEND) return "REDIR_APPEND (>>)";
+	if (type == HEREDOC)      return "HEREDOC (<<)";
+	return "UNKNOWN_REDIR";
+}
+
+static void put_argv(char **av)
+{
+	int i = 0;
+
+	if (!av)
+	{
+		printf("(null)\n");
+		return;
+	}
+	while (av[i])
+	{
+		printf("\"%s\"", av[i]);
+		if (av[i + 1])
+			printf(" ");
+		i++;
+	}
+	printf("\n");
+}
+
+static void put_redirs(t_redir *r)
+{
+	int i = 0;
+
+	if (!r)
+	{
+		printf("  redirs: (none)\n");
+		return;
+	}
+	printf("  redirs:\n");
+	while (r)
+	{
+		printf("    - #%d type=%s (%d) file=\"%s\"\n",
+			i, redir_type_name(r->type), r->type,
+			(r->file ? r->file : "(null)"));
+		r = r->next;
+		i++;
+	}
+}
+
+void ft_putcmds(t_cmd *cmds)
+{
+	int n = 0;
+
+	printf("!!ft_putcmds here!!\n");
+	while (cmds)
+	{
+		printf("cmd #%d\n", n);
+		printf("  av: ");
+		put_argv(cmds->av);
+		put_redirs(cmds->redirs);
+		cmds = cmds->next;
+		n++;
+	}
+	printf("!!ft_putcmds finished now!!\n");
+}
 
 t_cmd	*parse_input(char *str, t_shell *shell)
 {
@@ -28,5 +93,8 @@ t_cmd	*parse_input(char *str, t_shell *shell)
 	remove_empty_words(&tokens);
 	cmds = parse_build_cmds(tokens, shell);
 	free_tokens(tokens);
+//	/*
+	ft_putcmds(cmds);
+//	*/
 	return (cmds);
 }

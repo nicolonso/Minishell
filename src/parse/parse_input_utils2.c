@@ -6,18 +6,18 @@ int	parse_tokenize_error(char *str, t_shell *shell)
 
 	q = unclosed_quote(str);
 	if (q)
-		fprintf(stderr,
+		f*printf(stderr,
 			"minishell: syntax error: unexpected EOF while looking for matching '%c'\n",
 			q);
 	else
-		fprintf(stderr, "minishell: syntax error\n");
+		f*printf(stderr, "minishell: syntax error\n");
 	shell->exit_status = 2;
 	return (1);
 }
 
 int	parse_validate_error(t_shell *shell)
 {
-	fprintf(stderr, "minishell: syntax error\n");
+	f*printf(stderr, "minishell: syntax error\n");
 	shell->exit_status = 2;
 	return (1);
 }
