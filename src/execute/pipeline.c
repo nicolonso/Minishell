@@ -12,20 +12,11 @@
 
 #include "../include/minishell.h"
 
-static void	exec_child(t_cmd *cmd, t_shell *shell, int (*pipes)[2],
-				int i_and_count[2])
+static void	exec_external_cmd(t_cmd *cmd, t_shell *shell)
 {
 	char	*path;
 	char	**env_arr;
 
-	setup_signals_child();
-	child_pipe_setup(pipes, i_and_count[0], i_and_count[1]);
-	apply_redirections(cmd->redirs);
-	if (is_builtin(cmd->av[0]))
-	{
-		execute_built_in_parent(cmd, shell);
-		exit(shell->exit_status);
-	}
 	path = get_command_path(cmd->av[0], shell);
 	env_arr = env_to_arr(shell->env);
 	if (!path)
@@ -40,6 +31,21 @@ static void	exec_child(t_cmd *cmd, t_shell *shell, int (*pipes)[2],
 	free(path);
 	ft_free_split(env_arr);
 	exit(126);
+}
+
+static void	exec_child(t_cmd *cmd, t_shell *shell, int (*pipes)[2],
+				int i_and_count[2])
+{
+	setup_signals_child();
+	child_pipe_setup(pipes, i_and_count[0], i_and_count[1]);
+	if (apply_redirections(cmd->redirs) < 0)
+		exit(1);
+	if (is_builtin(cmd->av[0]))
+	{
+		execute_built_in_parent(cmd, shell);
+		exit(shell->exit_status);
+	}
+	exec_external_cmd(cmd, shell);
 }
 
 static int	wait_children(pid_t *pids, int cmd_count)
@@ -99,6 +105,8 @@ int	execute_pipeline(t_cmd *cmd, t_shell *shell)
 		return (execute_builtin_with_redir(cmd, shell));
 	pipes = malloc(sizeof(int [2]) * (cmd_count - 1));
 	pids = malloc(sizeof(pid_t) * cmd_count);
+	if (create_pipes(pipes, cmd_count - 1) < 0)
+		return (free(pipes), free(pids), 1);
 	setup_signals_exec();
 	fork_commands(cmd, shell, pipes, pids);
 	close_all_pipes(pipes, cmd_count - 1);

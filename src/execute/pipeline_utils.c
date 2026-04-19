@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 13:43:34 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/19 12:51:17 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/19 19:49:38 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,28 @@ int	execute_builtin_with_redir(t_cmd *cmd, t_shell *shell)
 		close(saved_out);
 		return (1);
 	}
-	execute_built_in_parent(cmd, shell);
+	shell->exit_status = execute_built_in_parent(cmd, shell);
 	dup2(saved_in, STDIN_FILENO);
 	dup2(saved_out, STDOUT_FILENO);
 	close(saved_in);
 	close(saved_out);
 	return (shell->exit_status);
+}
+
+int	create_pipes(int (*pipes)[2], int count)
+{
+	int	i;
+
+	i = 0;
+	while (i < count)
+	{
+		if (pipe(pipes[i]) < 0)
+		{
+			close_all_pipes(pipes, i);
+			perror ("pipe");
+			return (-1);
+		}
+		i++;
+	}
+	return (0);
 }
