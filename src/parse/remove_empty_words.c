@@ -1,7 +1,7 @@
 
 #include "../../include/minishell.h"
 
-static int	is_empty_str(const char *s)
+int	is_empty_str(const char *s)
 {
 	if (!s)
 		return (1);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   prompt_loop.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/19 13:35:10 by nalfonso          #+#    #+#             */
+/*   Updated: 2026/04/19 13:35:12 by nalfonso         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/minishell.h"
 
 static void	free_redirs(t_redir *redir)
@@ -27,43 +39,53 @@ void	free_cmd(t_cmd *cmd)
 	}
 }
 
+static int	handle_prompt_input(char *input, t_shell *shell)
+{
+	if (g_sig == SIGINT)
+	{
+		g_sig = 0;
+		shell->exit_status = 130;
+		free(input);
+		return (1);
+	}
+	if (!input)
+	{
+		write(1, "exit\n", 5);
+		return (2);
+	}
+	return (0);
+}
+
+static void	execute_prompt_input(char *input, t_shell *shell)
+{
+	t_cmd	*cmd;
+
+	if (*input)
+		add_history(input);
+	if (ft_strcmp(input, "") == 0)
+		return ;
+	cmd = parse_input(input, shell);
+	if (!cmd)
+		return ;
+	ft_executor(cmd, shell);
+	free_cmd(cmd);
+}
+
 int	prompt_loop(t_shell *shell)
 {
 	char	*input;
-	t_cmd	*cmd;
+	int		status;
 
 	setup_signals_prompt();
 	while (1)
 	{
 		input = readline("minishell$ ");
-
-		/* Ctrl-C: readline may return "" or NULL depending on handler */
-		if (g_sig == SIGINT)
-		{
-			g_sig = 0;
-			shell->exit_status = 130;
-			free(input);
-			continue;
-		}
-
-		if (!input) /* Ctrl-D (EOF) */
-		{
-			write(1, "exit\n", 5);
-			break;
-		}
-
-		if (*input)
-			add_history(input);
-
-		if (ft_strcmp(input, "") != 0)
-		{
-			cmd = parse_input(input, shell);
-			if (cmd)
-			{
-				ft_executor(cmd, shell);
-				free_cmd(cmd);
-			}
-		}
+		status = handle_prompt_input(input, shell);
+		if (status == 1)
+			continue ;
+		if (status == 2)
+			break ;
+		execute_prompt_input(input, shell);
 		free(input);
 	}
 	return (shell->exit_status);

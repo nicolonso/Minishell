@@ -16,8 +16,8 @@ void	setup_signals_prompt(void)
 {
 	struct sigaction	sa;
 
-	rl_catch_signals = 0;   /* we manage signals ourselves */
-	rl_event_hook = NULL;  /* don't depend on it */
+	rl_catch_signals = 0;
+	rl_event_hook = NULL;
 
 	sigemptyset(&sa.sa_mask);
 	sa.sa_handler = sigint_prompt;
@@ -25,4 +25,16 @@ void	setup_signals_prompt(void)
 	sigaction(SIGINT, &sa, NULL);
 
 	signal(SIGQUIT, SIG_IGN);
+}
+
+void	setup_signals_exec(void)
+{
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+}
+
+void	setup_signals_child(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }

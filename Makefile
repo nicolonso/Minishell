@@ -12,6 +12,8 @@ LIBFT	= ./Lib/libft.a
 
 # Sources 
 SRCS    = main.c \
+          utils/env_build.c \
+		  utils/utils.c \
           parse/prompt_loop.c \
           parse/parse.c \
           parse/parse_errors.c \
@@ -24,6 +26,7 @@ SRCS    = main.c \
           parse/remove_empty_words.c \
           execute/executor.c \
           execute/pipeline.c \
+		  execute/pipeline_utils.c \
           execute/redir.c \
           execute/path.c \
           execute/env_utils.c \
@@ -34,9 +37,6 @@ SRCS    = main.c \
           execute/builtins/export.c \
           execute/builtins/unset.c \
           execute/builtins/exit.c \
-          utils/str.c \
-          utils/mem.c \
-          utils/error.c
 
 SRCS    := $(addprefix $(SRC_DIR), $(SRCS))
 OBJS    = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRCS))

@@ -6,19 +6,20 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/11 19:48:44 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/16 16:58:15 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/19 13:16:27 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../include/minishell.h"
 
-static t_env	*build_env(char **envp)
+/* static t_env	*build_env(char **envp)
 {
 	t_env	*head;
 	t_env	*node;
 	t_env	*last;
 	char	*eq;
 	int		i;
-
+	
 	head = NULL;
 	last = NULL;
 	i = 0;
@@ -41,21 +42,7 @@ static t_env	*build_env(char **envp)
 		i++;
 	}
 	return (head);
-}
-
-void	free_env(t_env *env)
-{
-	t_env	*next;
-
-	while (env)
-	{
-		next = env->next;
-		free(env->key);
-		free(env->value);
-		free(env);
-		env = next;
-	}
-}
+} */
 
 int	main(int ac, char **av, char **envp)
 {
@@ -67,11 +54,7 @@ int	main(int ac, char **av, char **envp)
 	shell.env = build_env(envp);
 	shell.env_arr = NULL;
 	shell.exit_status = 0;
-
 	status = prompt_loop(&shell);
-
 	free_env(shell.env);
-	/* if you allocate shell.env_arr later, free it here too */
-
 	return (status);
 }

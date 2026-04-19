@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_build.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 19:55:06 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/16 19:58:34 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/19 12:59:22 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static int	redir_type_from_token(int tok_type)
 	return (HEREDOC);
 }
 
-static t_token	*append_redir(t_token *tok, t_cmd *cmd)
+static t_token	*append_redir(t_token *tok, t_cmd *cmd, int redir_type)
 {
 	t_redir	*redir;
 	t_redir	*last;
@@ -37,7 +37,7 @@ static t_token	*append_redir(t_token *tok, t_cmd *cmd)
 	redir = ft_calloc(1, sizeof(t_redir));
 	if (!redir)
 		return (NULL);
-	redir->type = redir_type_from_token(tok->type);
+	redir->type = redir_type;
 	redir->file = ft_strdup(tok->value);
 	redir->next = NULL;
 	if (!cmd->redirs)
@@ -54,10 +54,13 @@ static t_token	*append_redir(t_token *tok, t_cmd *cmd)
 
 static t_token	*skip_redir(t_token *tok, t_cmd *cmd, t_shell *shell)
 {
+	int	redir_type;
+
+	redir_type = redir_type_from_token(tok->type);
 	tok = tok->next;
 	if (!tok || tok->type != TOK_WORD)
 		return (parse_redir_error(shell), NULL);
-	return (append_redir(tok, cmd));
+	return (append_redir(tok, cmd, redir_type));
 }
 
 static int	count_words_until_pipe(t_token *tok)
