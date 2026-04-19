@@ -54,7 +54,7 @@ static int	open_redir_fd(t_redir *redir)
 	return (fd);
 }
 
-void	apply_redirections(t_redir *redir)
+int	apply_redirections(t_redir *redir)
 {
 	int	fd;
 
@@ -64,7 +64,7 @@ void	apply_redirections(t_redir *redir)
 		if (fd < 0)
 		{
 			perror(redir->file);
-			exit(1);
+			return (-1);
 		}
 		if (redir->type == REDIR_IN || redir->type == HEREDOC)
 			dup2(fd, STDIN_FILENO);
@@ -73,4 +73,5 @@ void	apply_redirections(t_redir *redir)
 		close(fd);
 		redir = redir->next;
 	}
+	return (0);
 }
