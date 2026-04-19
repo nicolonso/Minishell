@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 19:55:06 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/19 12:59:22 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/19 15:24:54 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,12 @@ static int	count_words_until_pipe(t_token *tok)
 	{
 		if (tok->type == TOK_WORD)
 			n++;
-		if (is_redir_token(tok->type) && tok->next)
+		else if (is_redir_token(tok->type))
+		{
 			tok = tok->next;
+			if (!tok)
+				break ;
+		}
 		tok = tok->next;
 	}
 	return (n);
@@ -91,7 +95,7 @@ static int	fill_cmd(t_cmd *cmd, t_token **cur, t_shell *shell)
 		if (is_redir_token(tok->type))
 		{
 			tok = skip_redir(tok, cmd, shell);
-			if (!tok)
+			if (!tok && shell->exit_status == 2)
 				return (1);
 			continue ;
 		}

@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 20:04:22 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/18 21:59:58 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/19 13:55:31 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ int	ft_built_echo(char **av, t_shell *shell)
 	}
 	while (av[i])
 	{
-		printf("%s", av[i]);
+		write(STDOUT_FILENO, av[i], ft_strlen(av[i]));
 		if (av[i + 1])
-			printf(" ");
+			write(STDOUT_FILENO, " ", 1);
 		i++;
 	}
 	if (newline)
-		printf("\n");
+		write(STDOUT_FILENO, "\n", 1);
 	return (0);
 }
