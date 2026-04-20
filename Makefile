@@ -18,8 +18,10 @@ SRCS    = main.c \
           parse/parse.c \
           parse/parse_errors.c \
           parse/parse_build.c \
+          parse/parse_build_utils.c \
           parse/signals.c \
           parse/tokenize.c \
+          parse/tokenize_utils.c \
           parse/token_syntax.c \
           parse/expand.c \
           parse/remove_quotes.c \

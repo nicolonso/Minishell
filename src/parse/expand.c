@@ -6,11 +6,11 @@
 /*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 20:21:01 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/20 11:49:55 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/20 12:33:37 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 static char	*str_join_free(char *dst, char *add)
 {
@@ -45,14 +45,13 @@ static char	*itoa_status(int st)
 static char	*dup_key_range(const char *s, int start, int end)
 {
 	char	*key;
+	char	tmp[2];
 
 	key = ft_strdup("");
 	if (!key)
 		return (NULL);
 	while (start < end)
 	{
-		char	tmp[2];
-
 		tmp[0] = s[start++];
 		tmp[1] = '\0';
 		key = str_join_free(key, ft_strdup(tmp));
@@ -66,23 +65,24 @@ static char	*expand_braced(const char *s, int *i, t_shell *shell)
 {
 	int		start;
 	int		end;
+	int		j;
 	char	*name;
 	char	*val;
 
-	(*i)++; /* skip '{' */
+	(*i)++;
 	start = *i;
 	while (s[*i] && s[*i] != '}')
 		(*i)++;
 	if (s[*i] != '}')
 		return (ft_strdup("$"));
 	end = *i;
-	(*i)++; /* skip '}' */
+	(*i)++;
 	if (end <= start)
 		return (ft_strdup(""));
 	if (!is_name_start(s[start]))
 		return (ft_strdup(""));
 	{
-		int	j;
+
 
 		j = start;
 		while (j < end)

@@ -10,48 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
-
-static t_token	*new_token(int type, char *value)
-{
-	t_token	*tok;
-
-	tok = ft_calloc(1, sizeof(t_token));
-	if (!tok)
-		return (NULL);
-	tok->type = type;
-	tok->value = value;
-	tok->next = NULL;
-	return (tok);
-}
-
-static void	token_append(t_token **head, t_token *new)
-{
-	t_token	*cur;
-
-	if (!*head)
-	{
-		*head = new;
-		return ;
-	}
-	cur = *head;
-	while (cur->next)
-		cur = cur->next;
-	cur->next = new;
-}
-
-void	free_tokens(t_token *tok)
-{
-	t_token	*next;
-
-	while (tok)
-	{
-		next = tok->next;
-		free(tok->value);
-		free(tok);
-		tok = next;
-	}
-}
+#include "minishell.h"
 
 static int	read_quoted(const char *s, int i, char *buf, int *len)
 {

@@ -1,4 +1,16 @@
-#include "../../include/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   remove_quotes.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/20 12:29:28 by qcyril-a          #+#    #+#             */
+/*   Updated: 2026/04/20 12:31:50 by qcyril-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
 
 static char	*str_join_free(char *dst, char *add)
 {
@@ -29,7 +41,10 @@ static char	*remove_quotes_word(const char *s)
 	{
 		if (state == 0 && (s[i] == '\'' || s[i] == '"'))
 		{
-			state = (s[i] == '\'') ? 1 : 2;
+			if (s[i] == '\'')
+				state = 1;
+			else
+				state = 2;
 			i++;
 			continue ;
 		}
