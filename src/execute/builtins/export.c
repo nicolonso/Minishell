@@ -6,13 +6,40 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 20:06:07 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/18 22:09:11 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/20 11:59:56 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "minishell.h"
 
-static int	add_or_update(t_shell *shell, char *arg)
+static int	export_print_error(char *arg)
+{
+	ft_putstr_fd("minishell: export: ", 2);
+	ft_putstr_fd(arg, 2);
+	ft_putstr_fd(": not a valid identifier\n", 2);
+	return (1);
+}
+
+static int	export_valid_key(char *arg)
+{
+	int	i;
+
+	if (!arg || !arg[0])
+		return (0);
+	i = 0;
+	if (!(ft_isalpha(arg[i]) || arg[i] == '_'))
+		return (0);
+	i++;
+	while (arg[i] && arg[i] != '=')
+	{
+		if (!(ft_isalnum(arg[i]) || arg[i] == '_'))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+static int	export_add_or_update(t_shell *shell, char *arg)
 {
 	char	*eq;
 	char	*key;
@@ -39,26 +66,40 @@ static int	add_or_update(t_shell *shell, char *arg)
 	return (0);
 }
 
-int	ft_built_export(char **av, t_shell *shell)
+static void	export_print_all(t_shell *shell)
 {
 	t_env	*e;
-	int		i;
+
+	e = shell->env;
+	while (e)
+	{
+		if (e->value)
+			printf("declare -x %s=\"%s\"\n", e->key, e->value);
+		else
+			printf("declare -x %s=\"\"\n", e->key);
+		e = e->next;
+	}
+}
+
+int	ft_built_export(char **av, t_shell *shell)
+{
+	int	i;
+	int	status;
 
 	if (!av[1])
 	{
-		e = shell->env;
-		while (e)
-		{
-			if (e->value)
-				printf("declare -x %s=\"%s\"\n", e->key, e->value);
-			else
-				printf("declare -x %s=\"\"\n", e->key);
-			e = e->next;
-		}
+		export_print_all(shell);
 		return (0);
 	}
 	i = 1;
+	status = 0;
 	while (av[i])
-		add_or_update(shell, av[i++]);
-	return (0);
+	{
+		if (!export_valid_key(av[i]))
+			status = export_print_error(av[i]);
+		else
+			export_add_or_update(shell, av[i]);
+		i++;
+	}
+	return (status);
 }

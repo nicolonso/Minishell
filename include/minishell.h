@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: qcyril-a <qcyril-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 23:27:21 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/19 19:59:57 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/20 12:24:42 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@
 # include <string.h>
 # include <fcntl.h>
 # include <signal.h>
-# include <ctype.h>
 # include <sys/wait.h>
+# include <sys/types.h>
+# include <sys/stat.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../Lib/hdr/libft.h"
@@ -98,8 +99,14 @@ void	setup_signals_child(void);
 t_token	*tokenize(const char *input);
 void	free_tokens(t_token *tok);
 void	remove_empty_words(t_token **head);
+t_token	*append_redir(t_token *tok, t_cmd *cmd, int redir_type);
+int		redir_type_from_token(int tok_type);
+int		is_redir_token(int type);
+void	token_append(t_token **head, t_token *new);
+t_token	*new_token(int type, char *value);
 
 /* ── parse ────────────────────────────────────────── */
+
 void	free_cmd(t_cmd *cmd);
 int		parse_tokenize_error(char *str, t_shell *shell);
 int		parse_validate_error(t_shell *shell);
@@ -112,6 +119,7 @@ t_cmd	*parse_input(char *str, t_shell *shell);
 /* ── expander ─────────────────────────────────────── */
 int		expand_tokens(t_token *tok, t_shell *shell);
 void	remove_quotes_tokens(t_token *tok);
+char	*ms_expand_word(const char *s, t_shell *shell);
 
 /* ── env helpers ──────────────────────────────────── */
 void	update_env_value(t_env *env, char *key, char *value);
@@ -141,5 +149,8 @@ int		execute_pipeline(t_cmd *cmd, t_shell *shell);
 int		execute_builtin_with_redir(t_cmd *cmd, t_shell *shell);
 int		count_cmds(t_cmd *cmd);
 int		create_pipes(int (*pipes)[2], int count);
+void	exec_path_error(char *path, int code, char *msg);
+void	check_direct_path_or_exit(char *path);
+void	restore_stdio(int saved_in, int saved_out);
 
 #endif

@@ -18,15 +18,20 @@ SRCS    = main.c \
           parse/parse.c \
           parse/parse_errors.c \
           parse/parse_build.c \
+          parse/parse_build_utils.c \
           parse/signals.c \
           parse/tokenize.c \
+          parse/tokenize_utils.c \
           parse/token_syntax.c \
           parse/expand.c \
+          parse/expand_utils.c \
+          parse/expand_utils2.c \
           parse/remove_quotes.c \
           parse/remove_empty_words.c \
           execute/executor.c \
           execute/pipeline.c \
 		  execute/pipeline_utils.c \
+		  execute/pipeline_utils2.c \
           execute/redir.c \
           execute/path.c \
           execute/env_utils.c \

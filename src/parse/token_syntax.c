@@ -1,10 +1,16 @@
-#include "../../include/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   token_syntax.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/20 12:32:16 by qcyril-a          #+#    #+#             */
+/*   Updated: 2026/04/20 12:32:23 by qcyril-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static int	is_redir_token(int type)
-{
-	return (type == TOK_REDIR_IN || type == TOK_REDIR_OUT
-		|| type == TOK_APPEND || type == TOK_HEREDOC);
-}
+#include "minishell.h"
 
 int	validate_tokens(t_token *tok)
 {
@@ -29,6 +35,5 @@ int	validate_tokens(t_token *tok)
 	}
 	if (prev && prev->type == TOK_PIPE)
 		return (-1);
-
 	return (0);
 }
