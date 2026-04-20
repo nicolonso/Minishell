@@ -6,7 +6,7 @@
 /*   By: qcyril-a <qcyril-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 23:27:21 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/20 12:24:42 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/20 14:51:29 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_shell
 	t_env			*env;
 	char			**env_arr;
 	int				exit_status;
+	char			*prog_name;
 }	t_shell;
 
 /* ── token types ─────────────────────────────────── */

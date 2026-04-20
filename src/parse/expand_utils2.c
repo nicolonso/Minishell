@@ -10,20 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   expand_utils2.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/20 00:00:00 by copilot          #+#    #+#             */
-/*   Updated: 2026/04/20 00:00:00 by copilot          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "minishell.h"
 #include "parse_internal.h"
+#include "minishell.h"
 
 static char	*ms_dup_env_value(t_shell *shell, char *name)
 {
@@ -87,6 +76,16 @@ static char	*ms_expand_dollar(const char *s, int *i, t_shell *shell)
 	{
 		(*i)++;
 		return (ft_itoa(shell->exit_status));
+	}
+	if (s[*i] >= '0' && s[*i] <= '9')
+	{
+		if (s[*i] == '0' && shell->prog_name)
+		{
+			(*i)++;
+			return (ft_strdup(shell->prog_name));
+		}
+		(*i)++;
+		return (ft_strdup(""));
 	}
 	if (s[*i] == '{')
 	{
