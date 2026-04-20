@@ -6,7 +6,7 @@
 /*   By: qcyril-a <qcyril-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 23:27:21 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/20 14:51:29 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/20 15:23:05 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ t_cmd	*parse_input(char *str, t_shell *shell);
 int		expand_tokens(t_token *tok, t_shell *shell);
 void	remove_quotes_tokens(t_token *tok);
 char	*ms_expand_word(const char *s, t_shell *shell);
+void	split_expanded_tokens(t_token **tok);
 
 /* ── env helpers ──────────────────────────────────── */
 void	update_env_value(t_env *env, char *key, char *value);

@@ -26,6 +26,7 @@ SRCS    = main.c \
           parse/expand.c \
           parse/expand_utils.c \
           parse/expand_utils2.c \
+          parse/expand_split.c \
           parse/remove_quotes.c \
           parse/remove_empty_words.c \
           execute/executor.c \
