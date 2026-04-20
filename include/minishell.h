@@ -6,7 +6,7 @@
 /*   By: qcyril-a <qcyril-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 23:27:21 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/20 15:23:05 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/20 15:34:08 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,12 @@ typedef struct s_token
 # define REDIR_APPEND  3
 # define HEREDOC       4
 
-/* ── libft ────────────────────────────────────────── */
+/* ── utils ────────────────────────────────────────── */
 void	ft_free_split(char **arr);
 char	*ft_strndup(const char *s, size_t n);
 int		ft_strcmp(char *s1, const char *s2);
 int		is_empty_str(const char *s);
+int	ft_has_charset(const char *s, const char *set);
 
 /* ── env build ─────────────────────────────────── */
 t_env	*build_env(char **envp);
@@ -119,9 +120,9 @@ t_cmd	*parse_input(char *str, t_shell *shell);
 
 /* ── expander ─────────────────────────────────────── */
 int		expand_tokens(t_token *tok, t_shell *shell);
-void	remove_quotes_tokens(t_token *tok);
+int		remove_quotes_tokens(t_token *tok);
 char	*ms_expand_word(const char *s, t_shell *shell);
-void	split_expanded_tokens(t_token **tok);
+int		split_expanded_tokens(t_token **tok);
 
 /* ── env helpers ──────────────────────────────────── */
 void	update_env_value(t_env *env, char *key, char *value);

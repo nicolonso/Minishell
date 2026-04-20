@@ -12,6 +12,17 @@
 
 #include "minishell.h"
 
+int	ms_token_needs_split(t_token *tok)
+{
+	if (!tok || tok->type != TOK_WORD || !tok->value)
+		return (0);
+	if (ft_has_charset(tok->value, "'\""))
+		return (0);
+	if (ft_has_charset(tok->value, " \t"))
+		return (1);
+	return (0);
+}
+
 int	expand_tokens(t_token *tok, t_shell *shell)
 {
 	char	*newv;

@@ -11,43 +11,30 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include "parse_internal.h"
 
-static int	has_quotes(char *s)
+static int	ms_is_sep(char c)
 {
-	int	i;
-
-	i = 0;
-	while (s && s[i])
-	{
-		if (s[i] == '\'' || s[i] == '"')
-			return (1);
-		i++;
-	}
+	if (c == ' ' || c == '\t')
+		return (1);
 	return (0);
 }
 
-static int	is_sep(char c)
+static char	*ms_next_field(char *s, int *i)
 {
-	return (c == ' ' || c == '\t');
-}
+	int	start;
 
-static char	*next_field(char *s, int *i)
-{
-	int		start;
-	int		len;
-
-	while (s[*i] && is_sep(s[*i]))
+	while (s[*i] && ms_is_sep(s[*i]))
 		(*i)++;
 	start = *i;
-	while (s[*i] && !is_sep(s[*i]))
+	while (s[*i] && !ms_is_sep(s[*i]))
 		(*i)++;
-	len = *i - start;
-	if (len <= 0)
+	if (*i <= start)
 		return (NULL);
-	return (ft_strndup(s + start, len));
+	return (ft_strndup(s + start, *i - start));
 }
 
-static void	insert_fields(t_token **head, t_token *prev, t_token *cur)
+static int	ms_split_insert(t_token **head, t_token *prev, t_token *cur)
 {
 	int		i;
 	char	*field;
@@ -58,12 +45,12 @@ static void	insert_fields(t_token **head, t_token *prev, t_token *cur)
 	last = prev;
 	while (1)
 	{
-		field = next_field(cur->value, &i);
+		field = ms_next_field(cur->value, &i);
 		if (!field)
 			break ;
 		new = new_token(TOK_WORD, field);
 		if (!new)
-			break ;
+			return (free(field), 1);
 		if (!last)
 			*head = new;
 		else
@@ -74,9 +61,10 @@ static void	insert_fields(t_token **head, t_token *prev, t_token *cur)
 		last->next = cur->next;
 	free(cur->value);
 	free(cur);
+	return (0);
 }
 
-void	split_expanded_tokens(t_token **tok)
+int	split_expanded_tokens(t_token **tok)
 {
 	t_token	*prev;
 	t_token	*cur;
@@ -85,19 +73,18 @@ void	split_expanded_tokens(t_token **tok)
 	cur = *tok;
 	while (cur)
 	{
-		if (cur->type == TOK_WORD && cur->value)
+		if (ms_token_needs_split(cur))
 		{
-			if (!has_quotes(cur->value) && ft_strchr(cur->value, ' '))
-			{
-				insert_fields(tok, prev, cur);
-				if (prev)
-					cur = prev->next;
-				else
-					cur = *tok;
-				continue ;
-			}
+			if (ms_split_insert(tok, prev, cur) != 0)
+				return (1);
+			if (prev)
+				cur = prev->next;
+			else
+				cur = *tok;
+			continue ;
 		}
 		prev = cur;
 		cur = cur->next;
 	}
+	return (0);
 }

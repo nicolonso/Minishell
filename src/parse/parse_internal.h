@@ -15,6 +15,7 @@
 
 /* ── expand utilities ────────────────────────────── */
 
+int		ms_token_needs_split(t_token *tok);
 int		ms_is_name_start(char c);
 int		ms_is_name_char(char c);
 int		ms_append_char(char **out, char c);

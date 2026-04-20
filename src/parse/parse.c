@@ -12,6 +12,13 @@
 
 #include "minishell.h"
 
+static t_cmd	*parse_fail(t_token *tokens)
+{
+	if (tokens)
+		free_tokens(tokens);
+	return (NULL);
+}
+
 t_cmd	*parse_input(char *str, t_shell *shell)
 {
 	t_token	*tokens;
@@ -19,13 +26,21 @@ t_cmd	*parse_input(char *str, t_shell *shell)
 
 	tokens = tokenize(str);
 	if (!tokens)
-		return (parse_tokenize_error(str, shell), NULL);
+	{
+		parse_tokenize_error(str, shell);
+		return (NULL);
+	}
 	if (validate_tokens(tokens) != 0)
-		return (free_tokens(tokens), parse_validate_error(shell), NULL);
+	{
+		parse_validate_error(shell);
+		return (parse_fail(tokens));
+	}
 	if (expand_tokens(tokens, shell) != 0)
-		return (free_tokens(tokens), NULL);
-	split_expanded_tokens(&tokens);
-	remove_quotes_tokens(tokens);
+		return (parse_fail(tokens));
+	if (split_expanded_tokens(&tokens) != 0)
+		return (parse_fail(tokens));
+	if (remove_quotes_tokens(tokens) != 0)
+		return (parse_fail(tokens));
 	remove_empty_words(&tokens);
 	cmds = parse_build_cmds(tokens, shell);
 	free_tokens(tokens);

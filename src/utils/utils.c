@@ -52,3 +52,25 @@ char	*ft_strndup(const char *s, size_t n)
 	}
 	return (dest);
 }
+
+int	ft_has_charset(const char *s, const char *set)
+{
+	int	i;
+	int	j;
+
+	if (!s || !set)
+		return (0);
+	i = 0;
+	while (s[i])
+	{
+		j = 0;
+		while (set[j])
+		{
+			if (s[i] == set[j])
+				return (1);
+			j++;
+		}
+		i++;
+	}
+	return (0);
+}

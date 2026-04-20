@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+#include "minishell.h"
+
 static int	append_char(char **out, char c)
 {
 	char	tmp[2];
@@ -74,13 +76,16 @@ static char	*remove_quotes_word(const char *s)
 		if (handle_quote_state(s, &i, &state))
 			continue ;
 		if (append_char(&out, s[i]))
+		{
+			free(out);
 			return (NULL);
+		}
 		i++;
 	}
 	return (out);
 }
 
-void	remove_quotes_tokens(t_token *tok)
+int	remove_quotes_tokens(t_token *tok)
 {
 	char	*newv;
 
@@ -89,12 +94,12 @@ void	remove_quotes_tokens(t_token *tok)
 		if (tok->type == TOK_WORD && tok->value)
 		{
 			newv = remove_quotes_word(tok->value);
-			if (newv)
-			{
-				free(tok->value);
-				tok->value = newv;
-			}
+			if (!newv)
+				return (1);
+			free(tok->value);
+			tok->value = newv;
 		}
 		tok = tok->next;
 	}
+	return (0);
 }
