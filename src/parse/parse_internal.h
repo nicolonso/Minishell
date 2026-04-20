@@ -1,32 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   parse_internal.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/16 20:21:01 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/20 12:33:37 by qcyril-a         ###   ########.fr       */
+/*   Created: 2026/04/20 13:25:55 by qcyril-a          #+#    #+#             */
+/*   Updated: 2026/04/20 13:26:44 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef PARSE_INTERNAL_H
+# define PARSE_INTERNAL_H
 
-int	expand_tokens(t_token *tok, t_shell *shell)
-{
-	char	*newv;
+/* ── expand utilities ────────────────────────────── */
 
-	while (tok)
-	{
-		if (tok->type == TOK_WORD && tok->value)
-		{
-			newv = ms_expand_word(tok->value, shell);
-			if (!newv)
-				return (1);
-			free(tok->value);
-			tok->value = newv;
-		}
-		tok = tok->next;
-	}
-	return (0);
-}
+int		ms_is_name_start(char c);
+int		ms_is_name_char(char c);
+int		ms_append_char(char **out, char c);
+int		ms_append_str(char **out, char *add);
+void	ms_update_quote_state(char c, int *state);
+
+#endif

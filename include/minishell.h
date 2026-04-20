@@ -119,6 +119,7 @@ t_cmd	*parse_input(char *str, t_shell *shell);
 /* ── expander ─────────────────────────────────────── */
 int		expand_tokens(t_token *tok, t_shell *shell);
 void	remove_quotes_tokens(t_token *tok);
+char	*ms_expand_word(const char *s, t_shell *shell);
 
 /* ── env helpers ──────────────────────────────────── */
 void	update_env_value(t_env *env, char *key, char *value);
