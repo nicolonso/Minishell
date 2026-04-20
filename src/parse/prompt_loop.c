@@ -62,7 +62,7 @@ static void	execute_prompt_input(char *input, t_shell *shell)
 
 	if (*input)
 		add_history(input);
-	if (ft_strcmp(input, "") == 0)
+	if (is_empty_str(input))
 		return ;
 	cmd = parse_input(input, shell);
 	if (!cmd)

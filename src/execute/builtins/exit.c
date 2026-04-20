@@ -27,6 +27,25 @@ static void	exit_numeric_error(t_shell *shell, char *arg)
 	clean_exit(shell, 2);
 }
 
+static int	parse_digits(char *s, int i, int sign, unsigned long long *n)
+{
+	while (s[i])
+	{
+		if (s[i] < '0' || s[i] > '9')
+			return (1);
+		if (*n > 922337203685477580ULL)
+			return (1);
+		*n = *n * 10ULL + (s[i] - '0');
+		if (sign == 1 && *n > 9223372036854775807ULL)
+			return (1);
+		if (sign == -1
+			&& *n > 9223372036854775808ULL)
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 static int	parse_ll(char *s, long long *out)
 {
 	int					i;
@@ -46,23 +65,12 @@ static int	parse_ll(char *s, long long *out)
 	}
 	if (!s[i])
 		return (1);
-	while (s[i])
-	{
-		if (s[i] < '0' || s[i] > '9')
-			return (1);
-		if (n > 922337203685477580ULL)
-			return (1);
-		n = n * 10ULL + (unsigned long long)(s[i] - '0');
-		if (sign == 1 && n > 9223372036854775807ULL)
-			return (1);
-		if (sign == -1 && n > 9223372036854775808ULL)
-			return (1);
-		i++;
-	}
+	if (parse_digits(s, i, sign, &n))
+		return (1);
 	if (sign == -1 && n == 9223372036854775808ULL)
-		*out = (long long)(-9223372036854775807LL - 1LL);
+		*out = -9223372036854775807LL - 1LL;
 	else
-		*out = (long long)(sign * (long long)n);
+		*out = sign * (long long)n;
 	return (0);
 }
 

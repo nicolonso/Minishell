@@ -34,11 +34,29 @@ static char	*ms_next_field(char *s, int *i)
 	return (ft_strndup(s + start, *i - start));
 }
 
+static int	ms_insert_new_token(t_token **head, t_token *prev, \
+t_token *last, char *field)
+{
+	t_token	*new;
+
+	new = new_token(TOK_WORD, field);
+	if (!new)
+	{
+		free(field);
+		return (1);
+	}
+	if (!prev)
+		*head = new;
+	else
+		prev->next = new;
+	last = new;
+	return (0);
+}
+
 static int	ms_split_insert(t_token **head, t_token *prev, t_token *cur)
 {
 	int		i;
 	char	*field;
-	t_token	*new;
 	t_token	*last;
 
 	i = 0;
@@ -48,14 +66,8 @@ static int	ms_split_insert(t_token **head, t_token *prev, t_token *cur)
 		field = ms_next_field(cur->value, &i);
 		if (!field)
 			break ;
-		new = new_token(TOK_WORD, field);
-		if (!new)
-			return (free(field), 1);
-		if (!last)
-			*head = new;
-		else
-			last->next = new;
-		last = new;
+		if (ms_insert_new_token(head, last, last, field))
+			return (1);
 	}
 	if (last)
 		last->next = cur->next;

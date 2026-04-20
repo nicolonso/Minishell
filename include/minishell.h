@@ -84,7 +84,7 @@ void	ft_free_split(char **arr);
 char	*ft_strndup(const char *s, size_t n);
 int		ft_strcmp(char *s1, const char *s2);
 int		is_empty_str(const char *s);
-int	ft_has_charset(const char *s, const char *set);
+int		ft_has_charset(const char *s, const char *set);
 
 /* ── env build ─────────────────────────────────── */
 t_env	*build_env(char **envp);
