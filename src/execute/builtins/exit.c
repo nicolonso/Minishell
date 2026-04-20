@@ -6,11 +6,11 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 20:05:54 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/19 17:50:15 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/20 11:59:39 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "minishell.h"
 
 static int	is_numeric(const char *s)
 {
@@ -39,27 +39,28 @@ static void	clean_exit(t_shell *shell, int code)
 	exit(code);
 }
 
+static void	exit_numeric_error(t_shell *shell, char *arg)
+{
+	ft_putstr_fd("minishell: exit: ", 2);
+	ft_putstr_fd(arg, 2);
+	ft_putstr_fd(": numeric argument required\n", 2);
+	clean_exit(shell, 2);
+}
+
 int	ft_built_exit(char **av, t_shell *shell)
 {
 	int	code;
 
 	write(STDOUT_FILENO, "exit\n", 5);
 	if (!av[1])
-	{
 		clean_exit(shell, shell->exit_status);
-	}
 	if (av[2])
 	{
-		fprintf(stderr, "minishell: exit: too many arguments\n");
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 		return (1);
 	}
 	if (!is_numeric(av[1]))
-	{
-		ft_putstr_fd("minishell: exit: ", 2);
-		ft_putstr_fd(av[1], 2);
-		ft_putstr_fd(" : numeric argument required\n", 2);
-		clean_exit(shell, 2);
-	}
+		exit_numeric_error(shell, av[1]);
 	code = ft_atoi(av[1]) & 255;
 	clean_exit(shell, code);
 	return (0);

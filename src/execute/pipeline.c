@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipeline.c                                        :+:      :+:    :+:   */
+/*   pipeline.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: qcyril-a <qcyril-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/13 00:00:00 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/13 00:00:00 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/20 12:03:28 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,16 @@ static void	exec_external_cmd(t_cmd *cmd, t_shell *shell)
 	char	*path;
 	char	**env_arr;
 
-	path = get_command_path(cmd->av[0], shell);
 	env_arr = env_to_arr(shell->env);
+	if (ft_strchr(cmd->av[0], '/'))
+	{
+		check_direct_path_or_exit(cmd->av[0]);
+		execve(cmd->av[0], cmd->av, env_arr);
+		perror(cmd->av[0]);
+		ft_free_split(env_arr);
+		exit(126);
+	}
+	path = get_command_path(cmd->av[0], shell);
 	if (!path)
 	{
 		ft_putstr_fd(cmd->av[0], 2);
@@ -27,7 +35,7 @@ static void	exec_external_cmd(t_cmd *cmd, t_shell *shell)
 		exit(127);
 	}
 	execve(path, cmd->av, env_arr);
-	perror("execve");
+	perror(path);
 	free(path);
 	ft_free_split(env_arr);
 	exit(126);

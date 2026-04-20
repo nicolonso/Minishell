@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: qcyril-a <qcyril-a@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 23:27:21 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/19 19:59:57 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/20 12:13:09 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@
 # include <string.h>
 # include <fcntl.h>
 # include <signal.h>
-# include <ctype.h>
 # include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../Lib/hdr/libft.h"
@@ -141,5 +142,8 @@ int		execute_pipeline(t_cmd *cmd, t_shell *shell);
 int		execute_builtin_with_redir(t_cmd *cmd, t_shell *shell);
 int		count_cmds(t_cmd *cmd);
 int		create_pipes(int (*pipes)[2], int count);
+void	exec_path_error(char *path, int code, char *msg);
+void	check_direct_path_or_exit(char *path);
+void	restore_stdio(int saved_in, int saved_out);
 
 #endif

@@ -6,12 +6,11 @@
 /*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 20:21:01 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/17 02:25:18 by quintondell      ###   ########.fr       */
+/*   Updated: 2026/04/20 11:49:55 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include <ctype.h>
 
 static char	*str_join_free(char *dst, char *add)
 {
@@ -27,12 +26,12 @@ static char	*str_join_free(char *dst, char *add)
 
 static int	is_name_start(char c)
 {
-	return (isalpha((unsigned char)c) || c == '_');
+	return (ft_isalpha((unsigned char)c) || c == '_');
 }
 
 static int	is_name_char(char c)
 {
-	return (isalnum((unsigned char)c) || c == '_');
+	return (ft_isalnum((unsigned char)c) || c == '_');
 }
 
 static char	*itoa_status(int st)

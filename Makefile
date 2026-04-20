@@ -27,6 +27,7 @@ SRCS    = main.c \
           execute/executor.c \
           execute/pipeline.c \
 		  execute/pipeline_utils.c \
+		  execute/pipeline_utils2.c \
           execute/redir.c \
           execute/path.c \
           execute/env_utils.c \
