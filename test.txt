@@ -1,0 +1,35 @@
+- Heredorc Signal ^\ and \C
+-Export Function "export c" 
+have to work export without value
+env dont have to print this variables without values
+have to be alphabetical
+
+^\ This should be disable
+
+
+- echo "-n -n -n"
+- echo "-nnnnn"
+- echo "-nnnnn -n -nnn"
+have to work exactly like echo -n
+
+cntrl C in cat (process child) have to more one \n
+
+SIG int
+
+EXIT
+EXIT "" have to message,
+exit "                                1" dont have to message
+exit "                          " 2 its numeric argument, but in mine its two argument
+
+
+UNSET
+
+do with a lot of variebles like
+unset a b c d e f g
+
+export = need to be sort in alphabetical order
+
+
+Leaks with Filedescrptor with cd - (Disable this function) Just ignore
+
+memmory # define malloc(x) NULL
