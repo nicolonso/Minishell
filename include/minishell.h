@@ -55,6 +55,7 @@ typedef struct s_shell
 	t_env			*env;
 	char			**env_arr;
 	int				exit_status;
+	char			*prog_name;
 }	t_shell;
 
 /* ── token types ─────────────────────────────────── */
@@ -78,11 +79,12 @@ typedef struct s_token
 # define REDIR_APPEND  3
 # define HEREDOC       4
 
-/* ── libft ────────────────────────────────────────── */
+/* ── utils ────────────────────────────────────────── */
 void	ft_free_split(char **arr);
 char	*ft_strndup(const char *s, size_t n);
 int		ft_strcmp(char *s1, const char *s2);
 int		is_empty_str(const char *s);
+int		ft_has_charset(const char *s, const char *set);
 
 /* ── env build ─────────────────────────────────── */
 t_env	*build_env(char **envp);
@@ -94,9 +96,12 @@ extern volatile sig_atomic_t	g_sig;
 void	setup_signals_prompt(void);
 void	setup_signals_exec(void);
 void	setup_signals_child(void);
+void	setup_signals_heredoc(void);
 
 /* ── tokenizer ───────────────────────────────────── */
 t_token	*tokenize(const char *input);
+t_token	*new_token(int type, char *value);
+t_token	*append_redir(t_token *tok, t_cmd *cmd, int redir_type);
 void	free_tokens(t_token *tok);
 void	remove_empty_words(t_token **head);
 t_token	*append_redir(t_token *tok, t_cmd *cmd, int redir_type);
@@ -113,10 +118,10 @@ int		parse_validate_error(t_shell *shell);
 int		parse_redir_error(t_shell *shell);
 int		validate_tokens(t_token *tok);
 int		prompt_loop(t_shell *shell);
-t_cmd	*parse_build_cmds(t_token *tokens, t_shell *shell);
-t_cmd	*parse_input(char *str, t_shell *shell);
 
 /* ── expander ─────────────────────────────────────── */
+char	*ms_expand_word(const char *s, t_shell *shell);
+int		remove_quotes_tokens(t_token *tok);
 int		expand_tokens(t_token *tok, t_shell *shell);
 void	remove_quotes_tokens(t_token *tok);
 char	*ms_expand_word(const char *s, t_shell *shell);
@@ -135,16 +140,29 @@ int		ft_built_unset(char **av, t_shell *shell);
 int		ft_built_env(char **av, t_shell *shell);
 int		ft_built_exit(char **av, t_shell *shell);
 
+/* ── builtins helpers ──────────────────────────────────*/
+t_env	*new_env_node(char *key, char *value, t_env *next);
+void	sort_env_arr(t_env **arr, int n);
+void	fill_env_array(t_env **arr, t_env *env);
+void	print_export_line(t_env *env);
+int		count_env_nodes(t_env *env);
+int		env_has_key(t_env *env, char *key);
+int		export_print_error(char *arg);
+int		export_valid_key(char *arg);
+int		add_without_value(t_shell *shell, char *arg);
+
 /* ── executor ─────────────────────────────────────── */
 char	*get_command_path(char *cmd, t_shell *shell);
 int		is_builtin(char *cmd_name);
 int		execute_built_in_parent(t_cmd *cmd, t_shell *shell);
 int		ft_executor(t_cmd *cmd, t_shell *shell);
 
-/* ── pipeline & redirections ─────────────────────── */
+/* ── pipeline ─────────────────────────────────────── */
 void	child_pipe_setup(int (*pipes)[2], int i, int cmd_count);
 void	close_all_pipes(int (*pipes)[2], int count);
-int		apply_redirections(t_redir *redir);
+void	exec_path_error(char *path, int code, char *msg);
+void	check_direct_path_or_exit(char *path);
+void	restore_stdio(int saved_in, int saved_out);
 int		execute_pipeline(t_cmd *cmd, t_shell *shell);
 int		execute_builtin_with_redir(t_cmd *cmd, t_shell *shell);
 int		count_cmds(t_cmd *cmd);
@@ -152,5 +170,16 @@ int		create_pipes(int (*pipes)[2], int count);
 void	exec_path_error(char *path, int code, char *msg);
 void	check_direct_path_or_exit(char *path);
 void	restore_stdio(int saved_in, int saved_out);
+
+/* ── redirections ────────────────────────────────── */
+void	restore_termios_flags(void);
+void	clear_stdin_buffer(void);
+void	cleanup_readline_after_signal(void);
+void	heredoc_child_loop(int wfd, char *del, int do_expand, t_shell *shell);
+void	write_heredoc_output(int wfd, char *line, int do_expand, \
+t_shell *shell);
+int		handle_heredoc(char *delimiter, t_shell *shell);
+int		apply_redirections(t_redir *redir, t_shell *shell);
+int		wait_heredoc_child(int rfd, pid_t pid);
 
 #endif

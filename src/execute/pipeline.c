@@ -46,8 +46,12 @@ static void	exec_child(t_cmd *cmd, t_shell *shell, int (*pipes)[2],
 {
 	setup_signals_child();
 	child_pipe_setup(pipes, i_and_count[0], i_and_count[1]);
-	if (apply_redirections(cmd->redirs) < 0)
+	if (apply_redirections(cmd->redirs, shell) < 0)
+	{
+		if (g_sig == SIGINT)
+			exit (130);
 		exit(1);
+	}
 	if (is_builtin(cmd->av[0]))
 	{
 		execute_built_in_parent(cmd, shell);
@@ -72,7 +76,11 @@ static int	wait_children(pid_t *pids, int cmd_count)
 			if (WIFEXITED(status))
 				last_status = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
+			{
 				last_status = 128 + WTERMSIG(status);
+				if (WTERMSIG(status) == SIGINT)
+					write(1, "\n", 1);
+			}
 		}
 		i++;
 	}
@@ -112,7 +120,11 @@ int	execute_pipeline(t_cmd *cmd, t_shell *shell)
 	if (cmd_count == 1 && cmd->av && cmd->av[0] && is_builtin(cmd->av[0]))
 		return (execute_builtin_with_redir(cmd, shell));
 	pipes = malloc(sizeof(int [2]) * (cmd_count - 1));
+	if (!pipes)
+		return (free(pipes), 1);
 	pids = malloc(sizeof(pid_t) * cmd_count);
+	if (!pids)
+		return (free(pids), 1);
 	if (create_pipes(pipes, cmd_count - 1) < 0)
 		return (free(pipes), free(pids), 1);
 	setup_signals_exec();

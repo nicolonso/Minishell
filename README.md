@@ -79,3 +79,5 @@ minishell$ exit 0
 - [Write Your Own Shell — Tutorial by Stephen Brennan](https://brennan.io/2015/01/16/write-a-shell-in-c/) — A clear walkthrough of building a shell in C
 
 ### AI Usage
+
+AI assistance was used to create this project and find resources and testing the project.

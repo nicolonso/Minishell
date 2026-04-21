@@ -37,14 +37,20 @@ void	setup_signals_prompt(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void	setup_signals_exec(void)
+static void	heredoc_sigint_handler(int signum)
 {
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
+	(void)signum;
+	g_sig = SIGINT;
+	write(1, "\n", 1);
 }
 
-void	setup_signals_child(void)
+void	setup_signals_heredoc(void)
 {
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	struct sigaction	sa;
+
+	sigemptyset(&sa.sa_mask);
+	sa.sa_handler = heredoc_sigint_handler;
+	sa.sa_flags = 0;
+	sigaction(SIGINT, &sa, NULL);
+	signal(SIGQUIT, SIG_IGN);
 }

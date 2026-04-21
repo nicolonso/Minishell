@@ -20,6 +20,7 @@ SRCS    = main.c \
           parse/parse_build.c \
           parse/parse_build_utils.c \
           parse/signals.c \
+		  parse/signal_helper.c \
           parse/tokenize.c \
           parse/tokenize_utils.c \
           parse/token_syntax.c \
@@ -40,8 +41,11 @@ SRCS    = main.c \
           execute/builtins/echo.c \
           execute/builtins/env.c \
           execute/builtins/export.c \
+		  execute/builtins/export_helper.c \
+		  execute/builtins/export_helper_2.c \
           execute/builtins/unset.c \
           execute/builtins/exit.c \
+
 
 SRCS    := $(addprefix $(SRC_DIR), $(SRCS))
 OBJS    = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRCS))

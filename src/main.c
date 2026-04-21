@@ -10,7 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "minishell.h"
+
+static char	*get_prog_name(char *av0)
+{
+	char	*slash;
+
+	if (!av0)
+		return (ft_strdup("minishell"));
+	slash = ft_strrchr(av0, '/');
+	if (slash)
+		return (ft_strdup(slash + 1));
+	return (ft_strdup(av0));
+}
 
 int	main(int ac, char **av, char **envp)
 {
@@ -18,11 +30,15 @@ int	main(int ac, char **av, char **envp)
 	int		status;
 
 	(void)ac;
-	(void)av;
 	shell.env = build_env(envp);
 	shell.env_arr = NULL;
 	shell.exit_status = 0;
+	if (av[0])
+		shell.prog_name = get_prog_name(av[0]);
+	else
+		shell.prog_name = get_prog_name(NULL);
 	status = prompt_loop(&shell);
+	free(shell.prog_name);
 	free_env(shell.env);
 	return (status);
 }
