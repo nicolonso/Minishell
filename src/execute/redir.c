@@ -11,33 +11,101 @@
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+#include <termios.h>
 
-static int	handle_heredoc(char *delimiter)
+static void	restore_termios_flags(void)
 {
-	int		pipefd[2];
+	struct termios	t;
+
+	if (tcgetattr(STDIN_FILENO, &t) == -1)
+		return ;
+	t.c_lflag |= (ICANON | ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &t);
+}
+
+static void	heredoc_child_loop(int wfd, char *del)
+{
 	char	*line;
 
-	if (pipe(pipefd) < 0)
-	{
-		perror("pipe");
-		return (-1);
-	}
-	setup_signals_heredoc();
+	setup_signals_child();
 	while (1)
 	{
 		line = readline("> ");
-		if (!line || ft_strcmp(line, delimiter) == 0)
+		if (!line)
+		{
+			close(wfd);
+			exit(130);
+		}
+		if (ft_strcmp(line, del) == 0)
 		{
 			free(line);
 			break ;
 		}
-		write(pipefd[1], line, ft_strlen(line));
-		write(pipefd[1], "\n", 1);
+		write(wfd, line, ft_strlen(line));
+		write(wfd, "\n", 1);
 		free(line);
 	}
+	close(wfd);
+	exit(0);
+}
+
+static void	clear_stdin_buffer(void)
+{
+	if (!isatty(STDIN_FILENO))
+		return ;
+	/* discard any pending input / EOF state */
+	tcflush(STDIN_FILENO, TCIFLUSH);
+}
+
+static void	cleanup_readline_after_signal(void)
+{
+	/* reset readline internal state if available */
+	rl_cleanup_after_signal();
+	/* clear current line buffer and mark a new line */
+	rl_replace_line("", 0);
+	rl_on_new_line();
+}
+
+static int	wait_heredoc_child(int rfd, pid_t pid)
+{
+	int	status;
+
+	waitpid(pid, &status, 0);
+	setup_signals_prompt();
+	restore_termios_flags();
+	clear_stdin_buffer();
+	if ((WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		|| (WIFEXITED(status) && WEXITSTATUS(status) == 130))
+	{
+		g_sig = SIGINT;
+		write(1, "\n", 1);
+		cleanup_readline_after_signal();
+		close(rfd);
+		return (-1);
+	}
+	cleanup_readline_after_signal();
+	return (0);
+}
+
+int	handle_heredoc(char *delimiter)
+{
+	int	pipefd[2];
+	pid_t	pid;
+
+	if (pipe(pipefd) < 0)
+		return (perror("pipe"), -1);
+	setup_signals_exec();
+	pid = fork();
+	if (pid < 0)
+		return (perror("fork"), close(pipefd[0]), close(pipefd[1]), -1);
+	if (pid == 0)
+	{
+		close(pipefd[0]);
+		heredoc_child_loop(pipefd[1], delimiter);
+	}
 	close(pipefd[1]);
-	if (g_sig == SIGINT)
-		return (close(pipefd[0]), -1);
+	if (wait_heredoc_child(pipefd[0], pid) == -1)
+		return (-1);
 	return (pipefd[0]);
 }
 
