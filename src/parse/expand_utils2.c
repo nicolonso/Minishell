@@ -22,7 +22,7 @@ static char	*ms_dup_env_value(t_shell *shell, char *name)
 	return (ft_strdup(val));
 }
 
-static char	*ms_expand_simple(const char *s, int *i, t_shell *shell)
+char	*ms_expand_simple(const char *s, int *i, t_shell *shell)
 {
 	int		start;
 	char	*name;
@@ -39,7 +39,7 @@ static char	*ms_expand_simple(const char *s, int *i, t_shell *shell)
 	return (ret);
 }
 
-static char	*ms_expand_braced(const char *s, int *i, t_shell *shell)
+char	*ms_expand_braced(const char *s, int *i, t_shell *shell)
 {
 	int		start;
 	int		j;

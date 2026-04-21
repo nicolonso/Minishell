@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	handle_heredoc(char *delimiter)
+int	handle_heredoc(char *delimiter, t_shell *shell)
 {
 	int		pipefd[2];
 	pid_t	pid;
@@ -26,7 +26,7 @@ int	handle_heredoc(char *delimiter)
 	if (pid == 0)
 	{
 		close(pipefd[0]);
-		heredoc_child_loop(pipefd[1], delimiter);
+		heredoc_child_loop(pipefd[1], delimiter, shell);
 	}
 	close(pipefd[1]);
 	if (wait_heredoc_child(pipefd[0], pid) == -1)
@@ -34,7 +34,7 @@ int	handle_heredoc(char *delimiter)
 	return (pipefd[0]);
 }
 
-static int	open_redir_fd(t_redir *redir)
+static int	open_redir_fd(t_redir *redir, t_shell *shell)
 {
 	int	fd;
 
@@ -46,17 +46,17 @@ static int	open_redir_fd(t_redir *redir)
 	else if (redir->type == REDIR_APPEND)
 		fd = open(redir->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else if (redir->type == HEREDOC)
-		fd = handle_heredoc(redir->file);
+		fd = handle_heredoc(redir->file, shell);
 	return (fd);
 }
 
-int	apply_redirections(t_redir *redir)
+int	apply_redirections(t_redir *redir, t_shell *shell)
 {
 	int	fd;
 
 	while (redir)
 	{
-		fd = open_redir_fd(redir);
+		fd = open_redir_fd(redir, shell);
 		if (fd < 0)
 		{
 			if (redir->type != HEREDOC)

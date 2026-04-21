@@ -19,7 +19,7 @@ int	execute_builtin_with_redir(t_cmd *cmd, t_shell *shell)
 
 	saved_in = dup(STDIN_FILENO);
 	saved_out = dup(STDOUT_FILENO);
-	if (apply_redirections(cmd->redirs) < 0)
+	if (apply_redirections(cmd->redirs, shell) < 0)
 	{
 		restore_stdio(saved_in, saved_out);
 		shell->exit_status = 1;

@@ -132,6 +132,9 @@ int		ms_is_name_char(char c);
 int		ms_append_char(char **out, char c);
 int		ms_append_str(char **out, char *add);
 void	ms_update_quote_state(char c, int *state);
+char	*ms_expand_simple(const char *s, int *i, t_shell *shell);
+char	*ms_expand_braced(const char *s, int *i, t_shell *shell);
+char	*ms_expand_heredoc_word(const char *s, t_shell *shell);
 
 /* ── env helpers ──────────────────────────────────── */
 void	update_env_value(t_env *env, char *key, char *value);
@@ -170,17 +173,19 @@ void	close_all_pipes(int (*pipes)[2], int count);
 void	exec_path_error(char *path, int code, char *msg);
 void	check_direct_path_or_exit(char *path);
 void	restore_stdio(int saved_in, int saved_out);
-int		apply_redirections(t_redir *redir);
 int		execute_pipeline(t_cmd *cmd, t_shell *shell);
 int		execute_builtin_with_redir(t_cmd *cmd, t_shell *shell);
 int		count_cmds(t_cmd *cmd);
 int		create_pipes(int (*pipes)[2], int count);
 
 /* ── redirections ────────────────────────────────── */
-void	heredoc_child_loop(int wfd, char *del);
 void	restore_termios_flags(void);
 void	clear_stdin_buffer(void);
 void	cleanup_readline_after_signal(void);
+void	heredoc_child_loop(int wfd, char *del, t_shell *shell);
+int		handle_heredoc(char *delimiter, t_shell *shell);
+int		apply_redirections(t_redir *redir, t_shell *shell);
 int		wait_heredoc_child(int rfd, pid_t pid);
+
 
 #endif

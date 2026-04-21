@@ -22,9 +22,24 @@ void	restore_termios_flags(void)
 	tcsetattr(STDIN_FILENO, TCSANOW, &t);
 }
 
-void	heredoc_child_loop(int wfd, char *del)
+void	clear_stdin_buffer(void)
+{
+	if (!isatty(STDIN_FILENO))
+		return ;
+	tcflush(STDIN_FILENO, TCIFLUSH);
+}
+
+void	cleanup_readline_after_signal(void)
+{
+	rl_cleanup_after_signal(); /* GNU readline; if not available, still call rl_replace_line + rl_on_new_line */
+	rl_replace_line("", 0);
+	rl_on_new_line();
+}
+
+void	heredoc_child_loop(int wfd, char *del, t_shell *shell)
 {
 	char	*line;
+	char	*expanded;
 
 	setup_signals_child();
 	while (1)
@@ -40,26 +55,17 @@ void	heredoc_child_loop(int wfd, char *del)
 			free(line);
 			break ;
 		}
-		write(wfd, line, ft_strlen(line));
+		expanded = ms_expand_heredoc_word(line, shell);
+		if (expanded)
+		{
+			write(wfd, expanded, ft_strlen(expanded));
+			free(expanded);
+		}
 		write(wfd, "\n", 1);
 		free(line);
 	}
 	close(wfd);
 	exit(0);
-}
-
-void	clear_stdin_buffer(void)
-{
-	if (!isatty(STDIN_FILENO))
-		return ;
-	tcflush(STDIN_FILENO, TCIFLUSH);
-}
-
-void	cleanup_readline_after_signal(void)
-{
-	rl_cleanup_after_signal();
-	rl_replace_line("", 0);
-	rl_on_new_line();
 }
 
 int	wait_heredoc_child(int rfd, pid_t pid)

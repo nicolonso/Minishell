@@ -46,7 +46,7 @@ static void	exec_child(t_cmd *cmd, t_shell *shell, int (*pipes)[2],
 {
 	setup_signals_child();
 	child_pipe_setup(pipes, i_and_count[0], i_and_count[1]);
-	if (apply_redirections(cmd->redirs) < 0)
+	if (apply_redirections(cmd->redirs, shell) < 0)
 	{
 		if (g_sig == SIGINT)
 			exit (130);
