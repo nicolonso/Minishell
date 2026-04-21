@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   signal_helper.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/12 20:05:05 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/21 00:43:42 by nalfonso         ###   ########.fr       */
+/*   Created: 2026/04/21 01:22:19 by nalfonso          #+#    #+#             */
+/*   Updated: 2026/04/21 01:22:48 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
-int	ft_built_env(char **av, t_shell *shell)
+void	setup_signals_exec(void)
 {
-	t_env	*e;
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+}
 
-	(void)av;
-	e = shell->env;
-	while (e)
-	{
-		if (e->value)
-			printf("%s=%s\n", e->key, e->value);
-		e = e->next;
-	}
-	return (0);
+void	setup_signals_child(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }

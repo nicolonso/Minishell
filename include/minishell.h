@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 23:27:21 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/19 19:59:57 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/21 01:54:25 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <signal.h>
 # include <ctype.h>
 # include <sys/wait.h>
+# include <sys/stat.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../Lib/hdr/libft.h"
@@ -54,6 +55,7 @@ typedef struct s_shell
 	t_env			*env;
 	char			**env_arr;
 	int				exit_status;
+	char			*prog_name;
 }	t_shell;
 
 /* ── token types ─────────────────────────────────── */
@@ -77,11 +79,12 @@ typedef struct s_token
 # define REDIR_APPEND  3
 # define HEREDOC       4
 
-/* ── libft ────────────────────────────────────────── */
+/* ── utils ────────────────────────────────────────── */
 void	ft_free_split(char **arr);
 char	*ft_strndup(const char *s, size_t n);
 int		ft_strcmp(char *s1, const char *s2);
 int		is_empty_str(const char *s);
+int		ft_has_charset(const char *s, const char *set);
 
 /* ── env build ─────────────────────────────────── */
 t_env	*build_env(char **envp);
@@ -93,25 +96,41 @@ extern volatile sig_atomic_t	g_sig;
 void	setup_signals_prompt(void);
 void	setup_signals_exec(void);
 void	setup_signals_child(void);
+void	setup_signals_heredoc(void);
 
 /* ── tokenizer ───────────────────────────────────── */
 t_token	*tokenize(const char *input);
+t_token	*new_token(int type, char *value);
+t_token	*append_redir(t_token *tok, t_cmd *cmd, int redir_type);
 void	free_tokens(t_token *tok);
 void	remove_empty_words(t_token **head);
+void	token_append(t_token **head, t_token *new);
+int		redir_type_from_token(int tok_type);
+int		is_redir_token(int type);
 
 /* ── parse ────────────────────────────────────────── */
+t_cmd	*parse_build_cmds(t_token *tokens, t_shell *shell);
+t_cmd	*parse_input(char *str, t_shell *shell);
 void	free_cmd(t_cmd *cmd);
 int		parse_tokenize_error(char *str, t_shell *shell);
 int		parse_validate_error(t_shell *shell);
 int		parse_redir_error(t_shell *shell);
 int		validate_tokens(t_token *tok);
 int		prompt_loop(t_shell *shell);
-t_cmd	*parse_build_cmds(t_token *tokens, t_shell *shell);
-t_cmd	*parse_input(char *str, t_shell *shell);
 
 /* ── expander ─────────────────────────────────────── */
+char	*ms_expand_word(const char *s, t_shell *shell);
+int		remove_quotes_tokens(t_token *tok);
 int		expand_tokens(t_token *tok, t_shell *shell);
-void	remove_quotes_tokens(t_token *tok);
+int		split_expanded_tokens(t_token **tok);
+
+/* ── expand utilities ────────────────────────────── */
+int		ms_token_needs_split(t_token *tok);
+int		ms_is_name_start(char c);
+int		ms_is_name_char(char c);
+int		ms_append_char(char **out, char c);
+int		ms_append_str(char **out, char *add);
+void	ms_update_quote_state(char c, int *state);
 
 /* ── env helpers ──────────────────────────────────── */
 void	update_env_value(t_env *env, char *key, char *value);
@@ -127,6 +146,17 @@ int		ft_built_unset(char **av, t_shell *shell);
 int		ft_built_env(char **av, t_shell *shell);
 int		ft_built_exit(char **av, t_shell *shell);
 
+/* ── builtins helpers ──────────────────────────────────*/
+t_env	*new_env_node(char *key, char *value, t_env *next);
+void	sort_env_arr(t_env **arr, int n);
+void	fill_env_array(t_env **arr, t_env *env);
+void	print_export_line(t_env *env);
+int		count_env_nodes(t_env *env);
+int		env_has_key(t_env *env, char *key);
+int		export_print_error(char *arg);
+int		export_valid_key(char *arg);
+int		add_without_value(t_shell *shell, char *arg);
+
 /* ── executor ─────────────────────────────────────── */
 char	*get_command_path(char *cmd, t_shell *shell);
 int		is_builtin(char *cmd_name);
@@ -136,6 +166,9 @@ int		ft_executor(t_cmd *cmd, t_shell *shell);
 /* ── pipeline & redirections ─────────────────────── */
 void	child_pipe_setup(int (*pipes)[2], int i, int cmd_count);
 void	close_all_pipes(int (*pipes)[2], int count);
+void	exec_path_error(char *path, int code, char *msg);
+void	check_direct_path_or_exit(char *path);
+void	restore_stdio(int saved_in, int saved_out);
 int		apply_redirections(t_redir *redir);
 int		execute_pipeline(t_cmd *cmd, t_shell *shell);
 int		execute_builtin_with_redir(t_cmd *cmd, t_shell *shell);

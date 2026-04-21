@@ -22,6 +22,7 @@ static int	handle_heredoc(char *delimiter)
 		perror("pipe");
 		return (-1);
 	}
+	setup_signals_heredoc();
 	while (1)
 	{
 		line = readline("> ");
@@ -35,6 +36,8 @@ static int	handle_heredoc(char *delimiter)
 		free(line);
 	}
 	close(pipefd[1]);
+	if (g_sig == SIGINT)
+		return (close(pipefd[0]), -1);
 	return (pipefd[0]);
 }
 
@@ -63,7 +66,8 @@ int	apply_redirections(t_redir *redir)
 		fd = open_redir_fd(redir);
 		if (fd < 0)
 		{
-			perror(redir->file);
+			if (redir->type != HEREDOC)
+				perror(redir->file);
 			return (-1);
 		}
 		if (redir->type == REDIR_IN || redir->type == HEREDOC)

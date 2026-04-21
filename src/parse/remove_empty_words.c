@@ -1,5 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   remove_empty_words.c                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/20 12:28:24 by qcyril-a          #+#    #+#             */
+/*   Updated: 2026/04/20 12:28:55 by qcyril-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 int	is_empty_str(const char *s)
 {
@@ -35,7 +46,10 @@ void	remove_empty_words(t_token **head)
 		if (cur->type == TOK_WORD && is_empty_str(cur->value))
 		{
 			remove_one(head, prev, cur);
-			cur = (prev != NULL) ? prev->next : *head;
+			if (prev != NULL)
+				cur = prev->next;
+			else
+				cur = *head;
 		}
 		else
 		{
@@ -44,4 +58,3 @@ void	remove_empty_words(t_token **head)
 		}
 	}
 }
-

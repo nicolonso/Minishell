@@ -6,11 +6,11 @@
 /*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 19:54:35 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/16 19:54:38 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/20 14:28:54 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 static int	unclosed_quote(char *s)
 {
@@ -36,25 +36,25 @@ int	parse_tokenize_error(char *str, t_shell *shell)
 
 	q = unclosed_quote(str);
 	if (q)
-		fprintf(stderr,
-			"minishell: syntax error: unexpected EOF while looking for matching '%c'\n",
-			q);
+		ft_putstr_fd(
+			"minishell: syntax error: unexpected EOF while looking \
+for matching 'c'\n", 2);
 	else
-		fprintf(stderr, "minishell: syntax error\n");
+		ft_putstr_fd("minishell: syntax error\n", 2);
 	shell->exit_status = 2;
 	return (1);
 }
 
 int	parse_validate_error(t_shell *shell)
 {
-	fprintf(stderr, "minishell: syntax error\n");
+	ft_putstr_fd("minishell: syntax error\n", 2);
 	shell->exit_status = 2;
 	return (1);
 }
 
 int	parse_redir_error(t_shell *shell)
 {
-	fprintf(stderr, "minishell: syntax error near redirection\n");
+	ft_putstr_fd("minishell: syntax error near redirection\n", 2);
 	shell->exit_status = 2;
 	return (1);
 }

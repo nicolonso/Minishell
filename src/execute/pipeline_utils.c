@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 13:43:34 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/19 19:49:38 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/21 02:05:32 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,43 +47,10 @@ void	child_pipe_setup(int (*pipes)[2], int i, int cmd_count)
 	close_all_pipes(pipes, cmd_count - 1);
 }
 
-int	execute_builtin_with_redir(t_cmd *cmd, t_shell *shell)
+void	restore_stdio(int saved_in, int saved_out)
 {
-	int	saved_in;
-	int	saved_out;
-
-	saved_in = dup(STDIN_FILENO);
-	saved_out = dup(STDOUT_FILENO);
-	if (apply_redirections(cmd->redirs) < 0)
-	{
-		dup2(saved_in, STDIN_FILENO);
-		dup2(saved_out, STDOUT_FILENO);
-		close(saved_in);
-		close(saved_out);
-		return (1);
-	}
-	shell->exit_status = execute_built_in_parent(cmd, shell);
 	dup2(saved_in, STDIN_FILENO);
 	dup2(saved_out, STDOUT_FILENO);
 	close(saved_in);
 	close(saved_out);
-	return (shell->exit_status);
-}
-
-int	create_pipes(int (*pipes)[2], int count)
-{
-	int	i;
-
-	i = 0;
-	while (i < count)
-	{
-		if (pipe(pipes[i]) < 0)
-		{
-			close_all_pipes(pipes, i);
-			perror ("pipe");
-			return (-1);
-		}
-		i++;
-	}
-	return (0);
 }

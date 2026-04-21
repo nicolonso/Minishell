@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/13 21:07:26 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/19 13:41:11 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/21 02:09:52 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,26 @@ char	*ft_strndup(const char *s, size_t n)
 		i++;
 	}
 	return (dest);
+}
+
+int	ft_has_charset(const char *s, const char *set)
+{
+	int	i;
+	int	j;
+
+	if (!s || !set)
+		return (0);
+	i = 0;
+	while (s[i])
+	{
+		j = 0;
+		while (set[j])
+		{
+			if (s[i] == set[j])
+				return (1);
+			j++;
+		}
+		i++;
+	}
+	return (0);
 }

@@ -1,24 +1,70 @@
-#include "../../include/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   remove_quotes.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/20 12:29:28 by qcyril-a          #+#    #+#             */
+/*   Updated: 2026/04/20 12:31:50 by qcyril-a         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-static char	*str_join_free(char *dst, char *add)
+#include "minishell.h"
+
+#include "minishell.h"
+
+static int	append_char(char **out, char c)
 {
-	char	*tmp;
+	char	tmp[2];
+	char	*add;
+	char	*newv;
 
-	if (!dst || !add)
-		return (free(dst), free(add), NULL);
-	tmp = ft_strjoin(dst, add);
-	free(dst);
+	tmp[0] = c;
+	tmp[1] = '\0';
+	add = ft_strdup(tmp);
+	if (!add)
+		return (1);
+	newv = ft_strjoin(*out, add);
 	free(add);
-	return (tmp);
+	if (!newv)
+		return (1);
+	free(*out);
+	*out = newv;
+	return (0);
 }
 
-/* state: 0 none, 1 single, 2 double */
+static int	handle_quote_state(const char *s, int *i, int *state)
+{
+	if (*state == 0 && (s[*i] == '\'' || s[*i] == '"'))
+	{
+		if (s[*i] == '\'')
+			*state = 1;
+		else
+			*state = 2;
+		(*i)++;
+		return (1);
+	}
+	if (*state == 1 && s[*i] == '\'')
+	{
+		*state = 0;
+		(*i)++;
+		return (1);
+	}
+	if (*state == 2 && s[*i] == '"')
+	{
+		*state = 0;
+		(*i)++;
+		return (1);
+	}
+	return (0);
+}
+
 static char	*remove_quotes_word(const char *s)
 {
 	int		i;
 	int		state;
 	char	*out;
-	char	tmp[2];
 
 	i = 0;
 	state = 0;
@@ -27,34 +73,19 @@ static char	*remove_quotes_word(const char *s)
 		return (NULL);
 	while (s[i])
 	{
-		if (state == 0 && (s[i] == '\'' || s[i] == '"'))
-		{
-			state = (s[i] == '\'') ? 1 : 2;
-			i++;
+		if (handle_quote_state(s, &i, &state))
 			continue ;
-		}
-		if (state == 1 && s[i] == '\'')
+		if (append_char(&out, s[i]))
 		{
-			state = 0;
-			i++;
-			continue ;
-		}
-		if (state == 2 && s[i] == '"')
-		{
-			state = 0;
-			i++;
-			continue ;
-		}
-		tmp[0] = s[i++];
-		tmp[1] = '\0';
-		out = str_join_free(out, ft_strdup(tmp));
-		if (!out)
+			free(out);
 			return (NULL);
+		}
+		i++;
 	}
 	return (out);
 }
 
-void	remove_quotes_tokens(t_token *tok)
+int	remove_quotes_tokens(t_token *tok)
 {
 	char	*newv;
 
@@ -63,12 +94,12 @@ void	remove_quotes_tokens(t_token *tok)
 		if (tok->type == TOK_WORD && tok->value)
 		{
 			newv = remove_quotes_word(tok->value);
-			if (newv)
-			{
-				free(tok->value);
-				tok->value = newv;
-			}
+			if (!newv)
+				return (1);
+			free(tok->value);
+			tok->value = newv;
 		}
 		tok = tok->next;
 	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 20:06:14 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/18 21:52:59 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/21 01:09:53 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	ft_built_unset(char **av, t_shell *shell)
 	i = 1;
 	while (av[i])
 	{
-		remove_env_node(shell, av[1]);
+		remove_env_node(shell, av[i]);
 		i++;
 	}
 	return (0);
