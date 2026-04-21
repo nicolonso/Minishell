@@ -6,11 +6,11 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/12 20:05:54 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/21 01:20:50 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/20 11:59:39 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "minishell.h"
 
 static void	clean_exit(t_shell *shell, int code)
 {
@@ -77,6 +77,14 @@ static int	parse_ll(char *s, long long *out)
 	return (0);
 }
 
+static void	exit_numeric_error(t_shell *shell, char *arg)
+{
+	ft_putstr_fd("minishell: exit: ", 2);
+	ft_putstr_fd(arg, 2);
+	ft_putstr_fd(": numeric argument required\n", 2);
+	clean_exit(shell, 2);
+}
+
 int	ft_built_exit(char **av, t_shell *shell)
 {
 	long long	code;
@@ -90,8 +98,9 @@ int	ft_built_exit(char **av, t_shell *shell)
 		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 		return (1);
 	}
-	if (parse_ll(av[1], &code) != 0)
+	if (!is_numeric(av[1]))
 		exit_numeric_error(shell, av[1]);
-	clean_exit(shell, (unsigned char)code);
+	code = ft_atoi(av[1]) & 255;
+	clean_exit(shell, code);
 	return (0);
 }

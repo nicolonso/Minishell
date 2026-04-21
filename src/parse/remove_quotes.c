@@ -12,8 +12,6 @@
 
 #include "minishell.h"
 
-#include "minishell.h"
-
 static int	append_char(char **out, char c)
 {
 	char	tmp[2];
@@ -76,10 +74,7 @@ static char	*remove_quotes_word(const char *s)
 		if (handle_quote_state(s, &i, &state))
 			continue ;
 		if (append_char(&out, s[i]))
-		{
-			free(out);
 			return (NULL);
-		}
 		i++;
 	}
 	return (out);

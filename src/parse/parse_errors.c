@@ -6,7 +6,7 @@
 /*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 19:54:35 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/20 14:28:54 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/20 12:15:16 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ int	parse_tokenize_error(char *str, t_shell *shell)
 	q = unclosed_quote(str);
 	if (q)
 		ft_putstr_fd(
-			"minishell: syntax error: unexpected EOF while looking \
-for matching 'c'\n", 2);
+			"minishell: syntax error: unexpected EOF while looking\
+for matching '%c'\n", 2);
 	else
 		ft_putstr_fd("minishell: syntax error\n", 2);
 	shell->exit_status = 2;

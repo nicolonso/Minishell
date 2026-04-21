@@ -3,14 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   expand_utils2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/20 13:17:21 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/21 02:08:08 by nalfonso         ###   ########.fr       */
+/*   Updated: 2026/04/20 13:17:30 by qcyril-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_utils2.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/20 00:00:00 by copilot          #+#    #+#             */
+/*   Updated: 2026/04/20 00:00:00 by copilot          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+#include "parse_internal.h"
 
 static char	*ms_dup_env_value(t_shell *shell, char *name)
 {
@@ -22,7 +35,7 @@ static char	*ms_dup_env_value(t_shell *shell, char *name)
 	return (ft_strdup(val));
 }
 
-char	*ms_expand_simple(const char *s, int *i, t_shell *shell)
+static char	*ms_expand_simple(const char *s, int *i, t_shell *shell)
 {
 	int		start;
 	char	*name;
@@ -39,7 +52,7 @@ char	*ms_expand_simple(const char *s, int *i, t_shell *shell)
 	return (ret);
 }
 
-char	*ms_expand_braced(const char *s, int *i, t_shell *shell)
+static char	*ms_expand_braced(const char *s, int *i, t_shell *shell)
 {
 	int		start;
 	int		j;
@@ -74,16 +87,6 @@ static char	*ms_expand_dollar(const char *s, int *i, t_shell *shell)
 	{
 		(*i)++;
 		return (ft_itoa(shell->exit_status));
-	}
-	if (s[*i] >= '0' && s[*i] <= '9')
-	{
-		if (s[*i] == '0' && shell->prog_name)
-		{
-			(*i)++;
-			return (ft_strdup(shell->prog_name));
-		}
-		(*i)++;
-		return (ft_strdup(""));
 	}
 	if (s[*i] == '{')
 	{
