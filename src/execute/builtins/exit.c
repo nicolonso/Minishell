@@ -15,6 +15,10 @@
 static void	clean_exit(t_shell *shell, int code)
 {
 	rl_clear_history();
+	if (shell->prog_name)
+		free(shell->prog_name);
+	if (shell->env_arr)
+		ft_free_split(shell->env_arr);
 	free_env(shell->env);
 	exit(code);
 }

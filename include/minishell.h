@@ -22,6 +22,7 @@
 # include <fcntl.h>
 # include <signal.h>
 # include <ctype.h>
+# include <termios.h>
 # include <sys/wait.h>
 # include <sys/stat.h>
 # include <readline/readline.h>
@@ -163,7 +164,7 @@ int		is_builtin(char *cmd_name);
 int		execute_built_in_parent(t_cmd *cmd, t_shell *shell);
 int		ft_executor(t_cmd *cmd, t_shell *shell);
 
-/* ── pipeline & redirections ─────────────────────── */
+/* ── pipeline ─────────────────────────────────────── */
 void	child_pipe_setup(int (*pipes)[2], int i, int cmd_count);
 void	close_all_pipes(int (*pipes)[2], int count);
 void	exec_path_error(char *path, int code, char *msg);
@@ -174,5 +175,12 @@ int		execute_pipeline(t_cmd *cmd, t_shell *shell);
 int		execute_builtin_with_redir(t_cmd *cmd, t_shell *shell);
 int		count_cmds(t_cmd *cmd);
 int		create_pipes(int (*pipes)[2], int count);
+
+/* ── redirections ────────────────────────────────── */
+void	heredoc_child_loop(int wfd, char *del);
+void	restore_termios_flags(void);
+void	clear_stdin_buffer(void);
+void	cleanup_readline_after_signal(void);
+int		wait_heredoc_child(int rfd, pid_t pid);
 
 #endif
