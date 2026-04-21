@@ -12,23 +12,75 @@
 
 #include "minishell.h"
 
+static int	parse_heredoc_delim(char **out_delim, char *raw)
+{
+	int	len;
+
+	if (!raw)
+		return (0);
+	len = ft_strlen(raw);
+	if ((raw[0] == '\'' || raw[0] == '"') && len >= 2 && raw[len - 1] == raw[0])
+	{
+		*out_delim = ft_strndup(raw + 1, len - 2);
+		if (!*out_delim)
+			return (-1);
+		return (0);
+	}
+	*out_delim = ft_strdup(raw);
+	if (!*out_delim)
+		return (-1);
+	return (1);
+}
+
+void	heredoc_child_loop(int wfd, char *del, int do_expand, t_shell *shell)
+{
+	char	*line;
+
+	setup_signals_child();
+	while (1)
+	{
+		line = readline("> ");
+		if (!line)
+		{
+			close(wfd);
+			exit(130);
+		}
+		if (ft_strcmp(line, del) == 0)
+		{
+			free(line);
+			break ;
+		}
+		write_heredoc_output(wfd, line, do_expand, shell);
+		free(line);
+	}
+	close(wfd);
+	exit(0);
+}
+
 int	handle_heredoc(char *delimiter, t_shell *shell)
 {
 	int		pipefd[2];
 	pid_t	pid;
+	char	*del;
+	int		do_expand;
 
 	if (pipe(pipefd) < 0)
 		return (perror("pipe"), -1);
+	do_expand = parse_heredoc_delim(&del, delimiter);
+	if (do_expand < 0)
+		return (perror("malloc"), close(pipefd[0]), close(pipefd[1]), -1);
 	setup_signals_exec();
 	pid = fork();
 	if (pid < 0)
-		return (perror("fork"), close(pipefd[0]), close(pipefd[1]), -1);
+		return (perror("fork"), free(del), close(pipefd[0]), \
+close(pipefd[1]), -1);
 	if (pid == 0)
 	{
 		close(pipefd[0]);
-		heredoc_child_loop(pipefd[1], delimiter, shell);
+		heredoc_child_loop(pipefd[1], del, do_expand, shell);
 	}
 	close(pipefd[1]);
+	free(del);
 	if (wait_heredoc_child(pipefd[0], pid) == -1)
 		return (-1);
 	return (pipefd[0]);

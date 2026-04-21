@@ -182,10 +182,11 @@ int		create_pipes(int (*pipes)[2], int count);
 void	restore_termios_flags(void);
 void	clear_stdin_buffer(void);
 void	cleanup_readline_after_signal(void);
-void	heredoc_child_loop(int wfd, char *del, t_shell *shell);
+void	heredoc_child_loop(int wfd, char *del, int do_expand, t_shell *shell);
+void	write_heredoc_output(int wfd, char *line, int do_expand, \
+t_shell *shell);
 int		handle_heredoc(char *delimiter, t_shell *shell);
 int		apply_redirections(t_redir *redir, t_shell *shell);
 int		wait_heredoc_child(int rfd, pid_t pid);
-
 
 #endif

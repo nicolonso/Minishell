@@ -31,41 +31,26 @@ void	clear_stdin_buffer(void)
 
 void	cleanup_readline_after_signal(void)
 {
-	rl_cleanup_after_signal(); /* GNU readline; if not available, still call rl_replace_line + rl_on_new_line */
+	rl_cleanup_after_signal();
 	rl_replace_line("", 0);
 	rl_on_new_line();
 }
 
-void	heredoc_child_loop(int wfd, char *del, t_shell *shell)
+void	write_heredoc_output(int wfd, char *line, int do_expand, \
+t_shell *shell)
 {
-	char	*line;
-	char	*expanded;
+	char	*out;
 
-	setup_signals_child();
-	while (1)
+	if (do_expand)
+		out = ms_expand_heredoc_word(line, shell);
+	else
+		out = ft_strdup(line);
+	if (out)
 	{
-		line = readline("> ");
-		if (!line)
-		{
-			close(wfd);
-			exit(130);
-		}
-		if (ft_strcmp(line, del) == 0)
-		{
-			free(line);
-			break ;
-		}
-		expanded = ms_expand_heredoc_word(line, shell);
-		if (expanded)
-		{
-			write(wfd, expanded, ft_strlen(expanded));
-			free(expanded);
-		}
-		write(wfd, "\n", 1);
-		free(line);
+		write(wfd, out, ft_strlen(out));
+		free(out);
 	}
-	close(wfd);
-	exit(0);
+	write(wfd, "\n", 1);
 }
 
 int	wait_heredoc_child(int rfd, pid_t pid)

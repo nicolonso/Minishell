@@ -33,14 +33,13 @@ static char	*ms_expand_dollar_heredoc(const char *s, int *i, t_shell *shell)
 	if (s[*i] == '{')
 	{
 		(*i)++;
-		return (ms_expand_braced(s, i, shell)); /* reuse existing static helper */
+		return (ms_expand_braced(s, i, shell));
 	}
 	if (!ms_is_name_start(s[*i]))
 		return (ft_strdup("$"));
-	return (ms_expand_simple(s, i, shell)); /* reuse existing helper */
+	return (ms_expand_simple(s, i, shell));
 }
 
-/* public function used for heredoc lines */
 char	*ms_expand_heredoc_word(const char *s, t_shell *shell)
 {
 	int		i;
@@ -66,4 +65,3 @@ char	*ms_expand_heredoc_word(const char *s, t_shell *shell)
 	}
 	return (out);
 }
-
