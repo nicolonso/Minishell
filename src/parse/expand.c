@@ -6,11 +6,22 @@
 /*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/16 20:21:01 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/20 12:33:37 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/21 02:09:22 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ms_token_needs_split(t_token *tok)
+{
+	if (!tok || tok->type != TOK_WORD || !tok->value)
+		return (0);
+	if (ft_has_charset(tok->value, "'\""))
+		return (0);
+	if (ft_has_charset(tok->value, " \t"))
+		return (1);
+	return (0);
+}
 
 int	expand_tokens(t_token *tok, t_shell *shell)
 {

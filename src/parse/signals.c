@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qcyril-a <qcyril-a@student.42lisboa.com>   +#+  +:+       +#+        */
+/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/04/20 12:29:28 by qcyril-a          #+#    #+#             */
-/*   Updated: 2026/04/20 12:29:33 by qcyril-a         ###   ########.fr       */
+/*   Created: 2026/04/21 02:15:47 by nalfonso          #+#    #+#             */
+/*   Updated: 2026/04/21 02:16:27 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../include/minishell.h"
 
 volatile sig_atomic_t	g_sig = 0;
 

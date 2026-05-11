@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qcyril-a <qcyril-a@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: nalfonso <nalfonso@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/18 23:27:21 by nalfonso          #+#    #+#             */
-/*   Updated: 2026/04/20 12:24:42 by qcyril-a         ###   ########.fr       */
+/*   Updated: 2026/04/21 01:54:25 by nalfonso         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@
 # include <string.h>
 # include <fcntl.h>
 # include <signal.h>
+# include <ctype.h>
+# include <termios.h>
 # include <sys/wait.h>
-# include <sys/types.h>
 # include <sys/stat.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -104,14 +105,13 @@ t_token	*new_token(int type, char *value);
 t_token	*append_redir(t_token *tok, t_cmd *cmd, int redir_type);
 void	free_tokens(t_token *tok);
 void	remove_empty_words(t_token **head);
-t_token	*append_redir(t_token *tok, t_cmd *cmd, int redir_type);
+void	token_append(t_token **head, t_token *new);
 int		redir_type_from_token(int tok_type);
 int		is_redir_token(int type);
-void	token_append(t_token **head, t_token *new);
-t_token	*new_token(int type, char *value);
 
 /* ── parse ────────────────────────────────────────── */
-
+t_cmd	*parse_build_cmds(t_token *tokens, t_shell *shell);
+t_cmd	*parse_input(char *str, t_shell *shell);
 void	free_cmd(t_cmd *cmd);
 int		parse_tokenize_error(char *str, t_shell *shell);
 int		parse_validate_error(t_shell *shell);
@@ -123,8 +123,18 @@ int		prompt_loop(t_shell *shell);
 char	*ms_expand_word(const char *s, t_shell *shell);
 int		remove_quotes_tokens(t_token *tok);
 int		expand_tokens(t_token *tok, t_shell *shell);
-void	remove_quotes_tokens(t_token *tok);
-char	*ms_expand_word(const char *s, t_shell *shell);
+int		split_expanded_tokens(t_token **tok);
+
+/* ── expand utilities ────────────────────────────── */
+int		ms_token_needs_split(t_token *tok);
+int		ms_is_name_start(char c);
+int		ms_is_name_char(char c);
+int		ms_append_char(char **out, char c);
+int		ms_append_str(char **out, char *add);
+void	ms_update_quote_state(char c, int *state);
+char	*ms_expand_simple(const char *s, int *i, t_shell *shell);
+char	*ms_expand_braced(const char *s, int *i, t_shell *shell);
+char	*ms_expand_heredoc_word(const char *s, t_shell *shell);
 
 /* ── env helpers ──────────────────────────────────── */
 void	update_env_value(t_env *env, char *key, char *value);
@@ -167,9 +177,6 @@ int		execute_pipeline(t_cmd *cmd, t_shell *shell);
 int		execute_builtin_with_redir(t_cmd *cmd, t_shell *shell);
 int		count_cmds(t_cmd *cmd);
 int		create_pipes(int (*pipes)[2], int count);
-void	exec_path_error(char *path, int code, char *msg);
-void	check_direct_path_or_exit(char *path);
-void	restore_stdio(int saved_in, int saved_out);
 
 /* ── redirections ────────────────────────────────── */
 void	restore_termios_flags(void);
