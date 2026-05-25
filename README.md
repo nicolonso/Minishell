@@ -80,4 +80,4 @@ minishell$ exit 0
 
 ### AI Usage
 
-AI assistance was used to create this project and find resources and testing the project.
+AI assistance was used to find resources and testing the project.
